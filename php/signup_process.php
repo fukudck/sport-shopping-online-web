@@ -1,6 +1,6 @@
 <?php
+session_start();
 require_once("conn.php");
-require_once("already_signin.php");
 require_once("signin_func.php");
 
 // Kiểm tra nếu form được gửi đi
@@ -37,12 +37,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Thêm người dùng mới vào bảng users
     $stmt = $conn->prepare("INSERT INTO users (user_id, username, email, password_hash, first_name, last_name, user_type, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $username = strtolower($first_name . '.' . $last_name); // Ví dụ tạo username từ tên và họ
+    $username =  $next_user_id;
     $user_type = 'Customer'; // Đặt user_type là Customer
     $stmt->bind_param("isssssss", $next_user_id, $username, $email, $password_hash, $first_name, $last_name, $user_type, $phone);
     if ($stmt->execute()) {
         echo "Đăng ký thành công cho $first_name $last_name!";
     } else {
-        echo "Có lỗi xảy ra khi thêm người dùng: " . $stmt->error;
+        $error_code = "2";
+        header("Location: ../account-signin.php?error_code=". urlencode($error_code));
     }
 
     $stmt->close();

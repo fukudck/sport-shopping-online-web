@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   
-<!-- Mirrored from cartzilla.createx.studio/account-signin.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Oct 2023 15:50:51 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
     <title> Đăng nhập tài khoản</title>
@@ -61,9 +60,10 @@
               </div>
             </div>
           </div>
-
         </div>
       </header> 
+
+
       <div class="container py-4 py-lg-5 my-4">
         <div class="row">
           <div class="col-md-6">
@@ -76,21 +76,30 @@
                 </div>
                 <hr>
                 <h3 class="fs-base pt-3 pb-2">Hoặc đăng nhập bằng Email</h3>
-                <form class="needs-validation" novalidate>
+
+
+                <form class="needs-validation" novalidate method="post" action="php/signin_process.php">
                   <div class="input-group mb-3"><i class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
-                    <input class="form-control rounded-start" type="email" placeholder="Email của bạn" required>
+                    <input class="form-control rounded-start" type="email" placeholder="Email của bạn" required name="email">
                   </div>
                   <div class="input-group mb-3"><i class="ci-locked position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
                     <div class="password-toggle w-100">
-                      <input class="form-control" type="password" placeholder="Password" required>
+                      <input class="form-control" type="password" placeholder="Password" required name="password">
                       <label class="password-toggle-btn" aria-label="Show/hide password">
                         <input class="password-toggle-check" type="checkbox"><span class="password-toggle-indicator"></span>
                       </label>
                     </div>
                   </div>
+
+
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert" <?php if (!isset($_GET['error_code']) || $_GET['error_code'] != 1) echo 'hidden'; ?>>
+                    <span class="fw-medium">Lỗi:</span> Sai thông tin đăng nhập.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+
                   <div class="d-flex flex-wrap justify-content-between">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" checked id="remember_me">
+                      <input class="form-check-input" type="checkbox" checked id="remember_me" name="remember_me">
                       <label class="form-check-label" for="remember_me">Nhớ mật khẩu</label>
                     </div>
                   </div>
@@ -99,6 +108,8 @@
                     <button class="btn btn-primary" type="submit"><i class="ci-sign-in me-2 ms-n21"></i>Đăng nhập</button>
                   </div>
                 </form>
+
+
               </div>
             </div>
           </div>
@@ -108,40 +119,47 @@
               <div class="card-body">
                 <h2 class="h4 mb-3">Chưa có tài khoản? Đăng ký</h2>
                 <p class="fs-sm text-muted mb-4">Việc đăng ký mất chưa đầy một phút nhưng giúp bạn kiểm soát hoàn toàn đơn hàng của mình.</p>
-                <form class="needs-validation" novalidate>
+
+                <form class="needs-validation" novalidate method="post" action="php/signup_process.php">
                   <div class="row gx-4 gy-3">
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-fn">Họ và tên đệm</label>
-                      <input class="form-control" type="text" required id="reg-fn">
+                      <input class="form-control" type="text" required id="reg-fn" name="first_name">
                       <div class="invalid-feedback">Vui lòng nhập họ và tên đệm!</div>
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-ln">Tên</label>
-                      <input class="form-control" type="text" required id="reg-ln">
+                      <input class="form-control" type="text" required id="reg-ln" name="last_name">
                       <div class="invalid-feedback">Vui lòng nhập tên!</div>
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-email">Địa chỉ E-mail</label>
-                      <input class="form-control" type="email" required id="reg-email">
+                      <input class="form-control" type="email" required id="reg-email" name="email">
                       <div class="invalid-feedback">Vui lòng nhập địa chỉ email!</div>
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-phone">Số điện thoại</label>
-                      <input class="form-control" type="text" required id="reg-phone">
+                      <input class="form-control" type="text" required id="reg-phone" name="phone">
                       <div class="invalid-feedback">Vui lòng nhập số điện thoại!</div>
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-password">Mật Khẩu</label>
-                      <input class="form-control" type="password" required id="reg-password">
+                      <input class="form-control" type="password" required id="reg-password" name="password">
                       <div class="invalid-feedback">Vui lòng nhập mật khẩu!</div>
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="reg-password-confirm">Nhập lại mật khẩu</label>
-                      <input class="form-control" type="password" required id="reg-password-confirm">
+                      <input class="form-control" type="password" required id="reg-password-confirm" name="password_confirm">
                       <div class="invalid-feedback">Mật khẩu không trùng khớp!</div>
                     </div>
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" <?php if (!isset($_GET['error_code']) || $_GET['error_code'] != 2) echo 'hidden'; ?>>
+                      <span class="fw-medium">Lỗi:</span> Email này đã được dùng.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
                     <div class="col-12 text-end">
-                      <button class="btn btn-primary" type="submit"><i class="ci-user me-2 ms-n1"></i>Đăng ký </button>
+                      <button class="btn btn-primary" type="submit"><i class="ci-user me-2 ms-n1"></i>Đăng ký</button>
                     </div>
                   </div>
                 </form>

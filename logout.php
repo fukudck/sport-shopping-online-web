@@ -17,6 +17,6 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // Chuyển hướng người dùng về trang đăng nhập hoặc trang chủ
-header("Location: login.php"); 
+header("Location: account-signin.php"); 
 exit();
 ?>

@@ -1,6 +1,6 @@
 <?php 
+session_start(); 
 require_once("conn.php");
-require_once("already_signin.php");
 require_once("signin_func.php");
 
 
@@ -22,9 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $remember_me = isset($_POST['remember_me']) ? true : false;
 
   // Gọi hàm signin
-  $error_message = signin($conn, $email, $password, $remember_me);
-  if (isset($error_message)) {
-      echo $error_message; // Hiển thị thông báo lỗi nếu có
+  $error_code = signin($conn, $email, $password, $remember_me);
+  if (isset($error_code)) {
+      header("Location: ../account-signin.php?error_code=". urlencode($error_code));
+
   }
 }
 $conn->close();

@@ -27,7 +27,7 @@ function signin($conn, $email, $password, $remember_me) {
         
         exit(); // Dừng thực thi sau khi chuyển hướng
     } else {
-        return "Email hoặc mật khẩu không đúng!";
+        return "1";
     }
   
     // Đóng statement
