@@ -56,7 +56,6 @@
                     </div>
                   </div>
 
-
                   <div class="alert alert-danger alert-dismissible fade show" role="alert" <?php if (!isset($_GET['error_code']) || $_GET['error_code'] != 1) echo 'hidden'; ?>>
                     <span class="fw-medium">Lỗi:</span> Sai thông tin đăng nhập.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -73,8 +72,6 @@
                     <button class="btn btn-primary" type="submit"><i class="ci-sign-in me-2 ms-n21"></i>Đăng nhập</button>
                   </div>
                 </form>
-
-
               </div>
             </div>
           </div>
