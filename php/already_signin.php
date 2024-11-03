@@ -1,8 +1,7 @@
 <?php 
 session_start();
-if (!isset($_SESSION['user']['id'])) {
-    header("Location: ../account-signin.php");
-    exit();
-  }
-
+function isLoggedIn() {
+  // Kiểm tra xem người dùng đã đăng nhập hay chưa
+  return isset($_SESSION['user']['id']);
+}
 ?>

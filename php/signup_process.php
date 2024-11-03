@@ -21,6 +21,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $password_hash = hash('sha256', $password);
 
+    // Kiểm tra xem email đã tồn tại chưa
+    $check_email_query = "SELECT email FROM users WHERE email = ?";
+    $stmt_check_email = $conn->prepare($check_email_query);
+    $stmt_check_email->bind_param("s", $email);
+    $stmt_check_email->execute();
+    $stmt_check_email->store_result();
+
+    if ($stmt_check_email->num_rows > 0) {
+        // Email đã tồn tại
+        $error_code = "2";
+        header("Location: ../account-signin.php?error_code=" . urlencode($error_code));
+        exit();
+    }
+
     // Nhận ID User tiếp theo
     $query = "SELECT MAX(user_id) AS max_id FROM users";
     $result = $conn->query($query);

@@ -1,7 +1,43 @@
+<?php
+  require_once("php/already_signin.php");
+  if (!isLoggedIn()) {
+    header("Location: account-signin.php");
+    exit();
+  }
+  require_once("php/conn.php");
+
+  $user_id = $_SESSION['user']['id'];
+
+  $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
+  $stmt->bind_param("i", $user_id); // "i" cho số nguyên
+  $stmt->execute();
+
+  // Lấy kết quả
+  $result = $stmt->get_result();
+
+  // Kiểm tra xem có kết quả không
+  if ($result->num_rows > 0) {
+      // Lấy dữ liệu người dùng
+      $user = $result->fetch_assoc();
+      
+      // // In ra thông tin người dùng
+      // echo "Họ: " . htmlspecialchars($user['first_name']) . "<br>";
+      // echo "Tên: " . htmlspecialchars($user['last_name']) . "<br>";
+      // echo "Email: " . htmlspecialchars($user['email']) . "<br>";
+      // echo "Số điện thoại: " . htmlspecialchars($user['phone_number']) . "<br>";
+  }
+
+// Đóng kết nối
+$stmt->close();
+$conn->close();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
     <title>Thông tin tài khoản</title>
@@ -94,9 +130,9 @@
             <div class="bg-white rounded-3 shadow-lg pt-1 mb-5 mb-lg-0">
               <div class="d-md-flex justify-content-between align-items-center text-center text-md-start p-4">
                 <div class="d-md-flex align-items-center">
-                  <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><span class="badge bg-warning position-absolute end-0 mt-n2" data-bs-toggle="tooltip" title="Reward points">384</span><img class="rounded-circle" src="img/shop/account/avatar.jpg" alt="Susan Gardner"></div>
+                  <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><span class="badge bg-warning position-absolute end-0 mt-n2" data-bs-toggle="tooltip" title="Reward points">384</span><img class="rounded-circle" src="<?php echo htmlspecialchars($user['avatar_img_link'])?>"></div>
                   <div class="ps-md-3">
-                    <h3 class="fs-base mb-0">Susan Gardner</h3><span class="text-accent fs-sm">s.gardner@example.com</span>
+                    <h3 class="fs-base mb-0"><?php echo htmlspecialchars($user['first_name']) ." ". htmlspecialchars($user['last_name'])?></h3><span class="text-accent fs-sm"><?php echo htmlspecialchars($user['email'])?></span>
                   </div>
                 </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Account menu</a>
               </div>
@@ -117,12 +153,12 @@
           <section class="col-lg-8">
             <!-- Toolbar-->
             <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-              <h6 class="fs-base text-light mb-0">Cập nhật thông tin cá nhân bên dưới:</h6><a class="btn btn-primary btn-sm" href="account-signin.html"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
+              <h6 class="fs-base text-light mb-0">Cập nhật thông tin cá nhân bên dưới:</h6><a class="btn btn-primary btn-sm" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
             <!-- Profile form-->
             <form>
               <div class="bg-secondary rounded-3 p-4 mb-4">
-                <div class="d-flex align-items-center"><img class="rounded" src="img/shop/account/avatar.jpg" width="90" alt="Susan Gardner">
+                <div class="d-flex align-items-center"><img class="rounded" src="<?php echo htmlspecialchars($user['avatar_img_link'])?>" width="90">
                   <div class="ps-3">
                     <button class="btn btn-light btn-shadow btn-sm mb-2" type="button"><i class="ci-loading me-2"></i>Thay ảnh</button>
                     <div class="p mb-0 fs-ms text-muted">Tải lên hình ảnh JPG, GIF hoặc PNG. Yêu cầu kích thước 300 x 300.</div>
@@ -132,19 +168,19 @@
               <div class="row gx-4 gy-3">
                 <div class="col-sm-6">
                   <label class="form-label" for="account-fn">Họ và tên đệm</label>
-                  <input class="form-control" type="text" id="account-fn" value="Susan">
+                  <input class="form-control" type="text" id="account-fn" value="<?php echo htmlspecialchars($user['first_name'])?>">
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-ln">Tên</label>
-                  <input class="form-control" type="text" id="account-ln" value="Gardner">
+                  <input class="form-control" type="text" id="account-ln" value="<?php echo htmlspecialchars($user['last_name'])?>">
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-email">Địa chỉ Email</label>
-                  <input class="form-control" type="email" id="account-email" value="s.gardner@example.com" disabled>
+                  <input class="form-control" type="email" id="account-email" value="<?php echo htmlspecialchars($user['email'])?>" disabled>
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-phone">Số điện thoại</label>
-                  <input class="form-control" type="text" id="account-phone" value="+7 (805) 348 95 72" required>
+                  <input class="form-control" type="text" id="account-phone" value="<?php echo htmlspecialchars($user['phone_number'])?>" required>
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-pass">Mật khẩu mới</label>

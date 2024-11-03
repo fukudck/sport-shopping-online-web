@@ -1,3 +1,11 @@
+<?php
+  require_once("php/already_signin.php");
+  if (isLoggedIn()) {
+    header("Location: test.php");
+    exit();
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   
