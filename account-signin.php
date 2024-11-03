@@ -19,51 +19,8 @@
   </head>
   <!-- Body-->
   <body>
-    <main class="page-wrapper">     
-      <!-- Navbar 3 Level (Light)-->
-      <header class="shadow-sm">
-        <div class="navbar-sticky bg-light ">
-          <div class="navbar navbar-expand-lg navbar-light inner_header">
-            <div class="container"><a
-                class="navbar-brand d-none d-sm-block flex-shrink-0"
-                href="index-2.html"><img src="img/logo-dark.png" width="142"
-                  alt="Cartzilla"></a><a
-                class="navbar-brand d-sm-none flex-shrink-0 me-2"
-                href="index-2.html"><img src="img/logo-icon.png" width="74"
-                  alt="Cartzilla"></a>
-              <div class="d-lg-flex">
-                <ul class="navbar-nav flex">
-                  <li class="nav-item"><a class="nav-link" href="#">Trang
-                      chủ</a>
-                  </li>
-                  <li class="nav-item"><a class="nav-link" href="#">Sản phẩm</a>
-                  </li>
-                  <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a>
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
-                <a class="navbar-tool d-none d-lg-flex"
-                  href="account-signin.html"><span
-                    class="navbar-tool-tooltip">Tài khoản</span>
-                  <div class="navbar-tool-icon-box"><i
-                      class="navbar-tool-icon ci-user"></i></div>
-                <div class="navbar-tool dropdown ms-3"><a
-                    class="navbar-tool-icon-box bg-secondary dropdown-toggle"
-                    href="shop-cart.html"><span
-                      class="navbar-tool-label">4</span><i
-                      class="navbar-tool-icon ci-cart"></i></a><a
-                    class="navbar-tool-text" href="shop-cart.html"><small>My
-                      Cart</small>$265.00</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header> 
-
-
+    <main class="page-wrapper">
+      <div id="header"></div> 
       <div class="container py-4 py-lg-5 my-4">
         <div class="row">
           <div class="col-md-6">
@@ -170,108 +127,17 @@
       </div>
     </main>
     <!-- Footer-->
-    <footer class="footer bg-dark pt-5">
-      <div class="container">
-        <div class="row pb-2">
-          <div class="col-md-4 col-sm-6">
-            <div class="widget widget-links widget-light pb-2 mb-4">
-              <h3 class="widget-title text-light">Shop departments</h3>
-              <ul class="widget-list">
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Dụng cụ</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Giày</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Áo</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Quần áo</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Đồ bơi</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Clogs &amp; Mules</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Thiết bị</li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Phụ kiện</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Kính mát &amp; Eyewear</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Đồng hồ</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6">
-            <div class="widget widget-links widget-light pb-2 mb-4">
-              <h3 class="widget-title text-light">Account &amp; shipping
-                info</h3>
-              <ul class="widget-list">
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Hỗ trợ khách hàng</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Chọn Size Giày Đá Bóng</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Giao hàng tận nơi</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Bảo hành & đổi trả</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Khách hàng thân thiết</a></li>
-              </ul>
-            </div>
-            <div class="widget widget-links widget-light pb-2 mb-4">
-              <h3 class="widget-title text-light">About us</h3>
-              <ul class="widget-list">
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Về chúng tôi</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Our team</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">Careers</a></li>
-                <li class="widget-list-item"><a class="widget-list-link"
-                    href="#">News</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="widget pb-2 mb-4">
-              <h3 class="widget-title text-light pb-1">Stay informed</h3>
-              <form class="subscription-form validate"
-                action="https://studio.us12.list-manage.com/subscribe/post?u=c7103e2c981361a6639545bd5&amp;amp;id=29ca296126"
-                method="post" name="mc-embedded-subscribe-form"
-                target="_blank" novalidate>
-                <div class="input-group flex-nowrap"><i
-                    class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
-                  <input class="form-control rounded-start" type="email"
-                    name="EMAIL" placeholder="Your email" required>
-                    <button class="btn btn-primary" type="submit"
-                    name="subscribe">Đăng ký*</button>
-                </div>
-                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                <div style="position: absolute; left: -5000px;"
-                  aria-hidden="true">
-                  <input class="subscription-form-antispam" type="text"
-                    name="b_c7103e2c981361a6639545bd5_29ca296126"
-                    tabindex="-1">
-                </div>
-                <div class="subscription-status"></div>
-              </form>
-            </div>
-            <div class="widget pb-2 mb-4">
-            <h3 class="widget-title text-light pb-1">Download our app</h3>
-              <div class="d-flex flex-wrap">
-                <div class="me-2 mb-2"><a class="btn-market btn-apple"
-                    href="#" role="button"><span
-                      class="btn-market-subtitle">Download on the</span><span
-                      class="btn-market-title">App Store</span></a></div>
-                <div class="mb-2"><a class="btn-market btn-google" href="#"
-                    role="button"><span class="btn-market-subtitle">Download
-                      on the</span><span class="btn-market-title">Google
-                      Play</span></a></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <div id="footer"></div>
+    <script>
+      async function loadComponent(id, file) {
+        const response = await fetch(file);
+        const html = await response.text();
+        document.getElementById(id).innerHTML = html;
+      }
+    
+      loadComponent("header", "header.html");
+      loadComponent("footer", "footer.html");
+    </script>
    
     <!-- Vendor scrits: js libraries and plugins-->
     <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
