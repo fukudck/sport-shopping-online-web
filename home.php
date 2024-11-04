@@ -19,14 +19,6 @@
 		$products[] = $row; // Thêm từng dòng vào mảng
 	}
 
-
-
-
-
-
-
-
-
 ?>
 
 

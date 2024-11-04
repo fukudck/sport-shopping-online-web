@@ -1,9 +1,46 @@
+<?php 
+  require_once('php/conn.php');
+  // Số sản phẩm trên mỗi trang
+  $products_per_page = 15;
+
+  // Lấy số trang hiện tại từ URL (mặc định là trang 1 nếu không có)
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $page = max($page, 1);
+
+  $offset = ($page - 1) * $products_per_page;
+
+  $sql = "SELECT p.*, c.category_name 
+    FROM products p 
+    JOIN categories c ON p.category_id = c.category_id 
+    ORDER BY p.product_id 
+    LIMIT ?, ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ii", $offset, $products_per_page);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+
+  $products = []; // Khởi tạo mảng để lưu trữ sản phẩm
+
+	while ($row = $result->fetch_assoc()) {
+		$products[] = $row; // Thêm từng dòng vào mảng
+	}
+
+  $total_result = $conn->query("SELECT COUNT(*) AS total FROM products");
+  $total_row = $total_result->fetch_assoc();
+  $total_products = $total_row['total'];
+
+  $total_pages = ceil($total_products / $products_per_page);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <head>
     <meta charset="utf-8" />
-    <title>Cartzilla | Shop grid right sidebar</title>
+    <title>Danh Sách Sản Phẩm</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Favicon and Touch Icons-->
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
@@ -63,756 +100,67 @@
           <!-- Content  -->
           <section class="col-lg-8">
             <!-- Toolbar-->
-            <div
-              class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-4 pb-sm-5"
-            >
+            <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-4 pb-sm-5">
               <div class="d-flex flex-wrap">
-                <div class="d-flex flex-wrap">
-                  <div
-                    class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3"
-                  >
-                    <label
-                      class="text-light fs-sm opacity-75 text-nowrap me-2 d-none d-sm-block"
-                      for="sorting"
-                      >Sắp xếp theo:</label
-                    >
-                    <select class="form-select custom-sort-select" id="sorting">
-                      <option>Phổ biến</option>
-                      <option>Giá thấp đến cao</option>
-                      <option>Giá cao đến thấp</option>
-                      <option>Giá trung bình</option>
-                      <option>Thứ tự từ A - Z</option>
-                      <option>Thứ tự từ Z - A</option>
-                    </select>
-                  </div>
+                <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
+                  <label class="text-light fs-sm opacity-75 text-nowrap me-2 d-none d-sm-block" for="sorting">Sắp xếp theo:</label>
+                  <select class="form-select" id="sorting">
+                    <option>Popularity</option>
+                    <option>Low - Hight Price</option>
+                    <option>High - Low Price</option>
+                    <option>Average Rating</option>
+                    <option>A - Z Order</option>
+                    <option>Z - A Order</option>
+                  </select>
                 </div>
               </div>
+              
+              
             </div>
             <!-- Products grid-->
             <div class="row mx-n2">
-              <!-- Product giày-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product áo-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product quần -->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product phụ kiện-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
+              <?php foreach ($products as $product) { ?>
               <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
+              <div class="col-md-4 col-sm-6 px-2 mb-4">
+                <div class="card product-card">
+                  <a class="card-img-top d-block overflow-hidden" href="shop-single-v1.html"><img src="img/shop/catalog/01.jpg" alt="Product"></a>
+                  <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#"><?php echo $product['category_name'] ?></a>
+                    <h3 class="product-title fs-sm"><a href="shop-single-v1.html"><?php echo $product['name'] ?></a></h3>
+                    <div class="d-flex justify-content-between">
+                      <div class="product-price"><span class="text-accent"><?php echo (int)$product['price'] ?><small>.000</small><sup>đ</sup></span></div>
+                      
                     </div>
                   </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
+                  <div class="card-body card-body-hidden">
+                    
+                    <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng</button>
+                    
                   </div>
                 </div>
-                <hr class="d-sm-none" />
+                <hr class="d-sm-none">
               </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
+              <!-- END- Product-->
+	    				<?php } ?>
             </div>
-            <!-- Products grid-->
-            <div class="row mx-n2">
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-              <!-- Product-->
-              <div class="col-md-4 col-sm-6 px-2 mb-4 custom-product-card">
-                <div class="card product-card border-0 shadow-sm custom-border">
-                  <a
-                    class="card-img-top d-block overflow-hidden custom-image-container"
-                    href="shop-single-v1.html"
-                  >
-                    <img
-                      src="img/shop/catalog/01.jpg"
-                      alt="Product"
-                      class="img-fluid custom-card-img"
-                    />
-                  </a>
-                  <div class="card-body py-2">
-                    <a
-                      class="product-meta d-block fs-xs pb-1 text-muted custom-product-meta"
-                      href="#"
-                      >Danh mục sản phẩm</a
-                    >
-                    <h3 class="product-title fs-sm custom-product-title">
-                      <a href="shop-single-v1.html" class="text-dark"
-                        >Tên sản phẩm</a
-                      >
-                    </h3>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div class="product-price custom-product-price">
-                        <span class="text-accent fw-bold">Giá</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="card-body card-body-hidden custom-card-body-hidden"
-                  >
-                    <button
-                      class="btn btn-accent btn-sm d-block w-100 mb-2 custom-add-to-cart"
-                      type="button"
-                    >
-                      <i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng
-                    </button>
-                  </div>
-                </div>
-                <hr class="d-sm-none" />
-              </div>
-            </div>
-            <hr class="my-3" />
+
+            <hr class="my-3">
             <!-- Pagination-->
-            <nav
-              class="custom-pagination d-flex justify-content-between pt-2"
-              aria-label="Page navigation"
-            >
+            <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
               <ul class="pagination">
-                <li class="page-item">
-                  <a class="page-link" href="#">
-                    <i class="ci-arrow-left me-2"></i>Trước
-                  </a>
-                </li>
+                <li class="page-item"><a class="page-link"  href="product.php?&page=1"><i class="ci-arrow-left me-2"></i>Trang đầu</a></li>
               </ul>
               <ul class="pagination">
-                <li class="page-item d-sm-none">
-                  <span class="page-link page-link-static">1/5</span>
-                </li>
-                <li
-                  class="page-item active d-none d-sm-block"
-                  aria-current="page"
-                >
-                  <span class="page-link"
-                    >1<span class="visually-hidden">(current)</span></span
-                  >
-                </li>
-                <li class="page-item d-none d-sm-block">
-                  <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item d-none d-sm-block">
-                  <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item d-none d-sm-block">
-                  <a class="page-link" href="#">4</a>
-                </li>
-                <li class="page-item d-none d-sm-block">
-                  <a class="page-link" href="#">5</a>
-                </li>
+
+                <?php 
+                  $startPage = max(1, $page - floor(5 / 2));
+                  $endPage = min($total_pages, $startPage + 5 - 1);
+                  for ($i = $startPage; $i <= $endPage; $i++) {
+                ?>
+                <li class="page-item <?php if($page == $i) echo "active" ?> d-none d-sm-block"><a  href="product.php?&page=<?php echo $i?>" class="page-link"><?php echo $i ?></a></li>
+                <?php } ?>
               </ul>
               <ul class="pagination">
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next"
-                    >Sau<i class="ci-arrow-right ms-2"></i
-                  ></a>
-                </li>
+                <li class="page-item"><a class="page-link"  href="product.php?&page=<?php echo $total_pages?>" aria-label="Next">Trang cuối<i class="ci-arrow-right ms-2"></i></a></li>
               </ul>
             </nav>
           </section>
