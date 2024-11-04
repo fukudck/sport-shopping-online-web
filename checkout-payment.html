@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+    <meta charset="utf-8">
+    <title>Thanh toán</title>
+    <!-- Viewport-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon and Touch Icons-->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
+    <link rel="stylesheet" media="screen" href="vendor/simplebar/dist/simplebar.min.css"/>
+    <link rel="stylesheet" media="screen" href="vendor/tiny-slider/dist/tiny-slider.css"/>
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css">
+  </head>
+  <!-- Body-->
+  <body class="handheldtoolbar-enabled">
+    <main class="page-wrapper">
+      <div id="header"></div>
+      <!-- Page Title-->
+      <div class="page-title-overlap bg-dark pt-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="home.html"><i class="ci-home"></i>Trang chủ</a></li>
+                <li class="breadcrumb-item text-nowrap"><a href="cart.html">Giỏ hàng</a>
+                </li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">Thanh toán</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 text-light mb-0">Thanh toán</h1>
+          </div>
+        </div>
+      </div>
+      <div class="container pb-5 mb-2 mb-md-4">
+        <div class="row">
+          <section class="col-lg-8">
+            <!-- Steps-->
+            <div class="steps steps-light pt-2 pb-3 mb-5">
+              <a class="step-item active" href="cart.html">
+                <div class="step-progress"><span class="step-count">1</span></div>
+                <div class="step-label"><i class="ci-cart"></i>Giỏ hàng</div>
+              </a>
+              <a class="step-item active" href="checkout-details.html">
+                <div class="step-progress"><span class="step-count">2</span></div>
+                <div class="step-label"><i class="ci-user-circle"></i>Địa chỉ</div>
+              </a>
+              <a class="step-item active current" href="checkout-payment.html">
+                <div class="step-progress"><span class="step-count">3</span></div>
+                <div class="step-label"><i class="ci-package"></i>Thanh toán</div>
+              </a>
+              <a class="step-item" href="checkout-review.html">
+                <div class="step-progress"><span class="step-count">4</span></div>
+                <div class="step-label"><i class="ci-check-circle"></i>Xác nhận</div>
+              </a>
+              </div>              
+            <!-- Payment methods-->
+            <h2 class="h6 pb-3 mb-2">Chọn phương thức thanh toán</h2>
+            <div id="payment-method">
+              <h6>Thêm thẻ tín dụng</h6>
+              <p class="fs-sm">Chúng tôi chấp nhận các thẻ sau:&nbsp;&nbsp;<img class="d-inline-block align-middle" src="img/cards.png" width="187" alt="Cerdit Cards"></p>
+                <div class="credit-card-wrapper"></div>
+                <form class="credit-card-form row">
+                  <div class="mb-3 col-sm-6">
+                    <input class="form-control" type="text" name="number" placeholder="Số thẻ" required>
+                  </div>
+                  <div class="mb-3 col-sm-6">
+                    <input class="form-control" type="text" name="name" placeholder="Tên chủ thẻ" required>
+                  </div>
+                  <div class="mb-3 col-sm-3">
+                    <input class="form-control" type="text" name="expiry" placeholder="MM/YY" required>
+                  </div>
+                  <div class="mb-3 col-sm-3">
+                    <input class="form-control" type="text" name="cvc" placeholder="Số CVC" required>
+                  </div>
+                  <div class="col-sm-6">
+                    <button class="btn btn-outline-primary d-block w-100 mt-0" type="submit">Thêm</button>
+                  </div>
+                </form>
+              <h6 class="mt-3">Hoặc chọn những thẻ đã có sẵn</h6>
+              <div class="mb-5">
+                <label for="select-input" class="form-label"></label>
+                <select class="form-select" id="select-input">
+                  <option>Chọn thẻ...</option>
+                  <option>Option item 1</option>
+                  <option>Option item 2</option>
+                  <option>Option item 3</option>
+                </select>
+              </div>
+              <hr>
+            </div>
+            
+            <!-- Navigation (desktop)-->
+            <div class="d-none d-lg-flex pt-4">
+              <div class="w-50 pe-3"><a class="btn btn-secondary d-block w-100" href="checkout-details.html"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">Chỉnh sửa địa chỉ</span><span class="d-inline d-sm-none">Quay lại</span></a></div>
+              <div class="w-50 ps-2"><a class="btn btn-primary d-block w-100" href="checkout-review.html"><span class="d-none d-sm-inline">Xác nhận đơn hàng</span><span class="d-inline d-sm-none">Tiếp theo</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
+            </div>
+          </section>
+          <!-- Sidebar-->
+          <aside class="col-lg-4 pt-4 pt-lg-0 ps-xl-5">
+            <div class="bg-white rounded-3 shadow-lg p-4 ms-lg-auto">
+              <div class="py-2 px-xl-2">
+                <div class="widget mb-3">
+                  <h2 class="widget-title text-center">Đơn hàng của bạn</h2>
+                  <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block flex-shrink-0" href="#"><img src="img/shop/cart/widget/01.jpg" width="64" alt="Product"></a>
+                    <div class="ps-2">
+                      <h6 class="widget-product-title"><a href="#">Women Colorblock Sneakers</a></h6>
+                      <div class="widget-product-meta"><span class="text-accent me-2">$150.<small>00</small></span><span class="text-muted">x 1</span></div>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block flex-shrink-0" href="#"><img src="img/shop/cart/widget/02.jpg" width="64" alt="Product"></a>
+                    <div class="ps-2">
+                      <h6 class="widget-product-title"><a href="#">TH Jeans City Backpack</a></h6>
+                      <div class="widget-product-meta"><span class="text-accent me-2">$79.<small>50</small></span><span class="text-muted">x 1</span></div>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block flex-shrink-0" href="#"><img src="img/shop/cart/widget/03.jpg" width="64" alt="Product"></a>
+                    <div class="ps-2">
+                      <h6 class="widget-product-title"><a href="#">3-Color Sun Stash Hat</a></h6>
+                      <div class="widget-product-meta"><span class="text-accent me-2">$22.<small>50</small></span><span class="text-muted">x 1</span></div>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block flex-shrink-0" href="#"><img src="img/shop/cart/widget/04.jpg" width="64" alt="Product"></a>
+                    <div class="ps-2">
+                      <h6 class="widget-product-title"><a href="#">Cotton Polo Regular Fit</a></h6>
+                      <div class="widget-product-meta"><span class="text-accent me-2">$9.<small>00</small></span><span class="text-muted">x 1</span></div>
+                    </div>
+                  </div>
+                </div>
+                <ul class="list-unstyled fs-sm pb-2 border-bottom">
+                  <li class="d-flex justify-content-between align-items-center"><span class="me-2">Tổng tiền hàng:</span><span class="text-end">$265.<small>00</small></span></li>
+                  <li class="d-flex justify-content-between align-items-center"><span class="me-2">Giảm giá:</span><span class="text-end">—</span></li>
+                </ul>
+                <h3 class="fw-normal text-center my-4">$274.<small>50</small></h3>
+                <form class="needs-validation" method="post" novalidate>
+                  <div class="mb-3">
+                    <input class="form-control" type="text" placeholder="Mã giảm giá" required>
+                    <div class="invalid-feedback">Vui lòng nhập mã giảm giá.</div>
+                  </div>
+                  <button class="btn btn-outline-primary d-block w-100" type="submit">Áp dụng mã giảm giá</button>
+                </form>
+              </div>
+            </div>
+          </aside>
+        </div>
+        <!-- Navigation (mobile)-->
+        <div class="row d-lg-none">
+          <div class="col-lg-8">
+            <div class="d-flex pt-4 mt-3">
+              <div class="w-50 pe-3"><a class="btn btn-secondary d-block w-100" href="checkout-details.html"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">Chỉnh sửa địa chỉ</span><span class="d-inline d-sm-none">Quay lại</span></a></div>
+              <div class="w-50 ps-2"><a class="btn btn-primary d-block w-100" href="checkout-review.html"><span class="d-none d-sm-inline">Xác nhận đơn hàng</span><span class="d-inline d-sm-none">Tiếp theo</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Footer-->
+    <div id="footer"></div>
+    <script>
+      async function loadComponent(id, file) {
+        const response = await fetch(file);
+        const html = await response.text();
+        document.getElementById(id).innerHTML = html;
+      }
+    
+      loadComponent("header", "header.html");
+      loadComponent("footer", "footer.html");
+    </script>
+    <!-- Toolbar cho thiet bi cam tay (Default)-->
+    <div class="handheld-toolbar">
+      <div class="d-table table-layout-fixed w-100"><a class="d-table-cell handheld-toolbar-item" href="account-wishlist.html"><span class="handheld-toolbar-icon"><i class="ci-heart"></i></span><span class="handheld-toolbar-label">Wishlist</span></a><a class="d-table-cell handheld-toolbar-item" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span><span class="handheld-toolbar-label">Menu</span></a><a class="d-table-cell handheld-toolbar-item" href="shop-cart.html"><span class="handheld-toolbar-icon"><i class="ci-cart"></i><span class="badge bg-primary rounded-pill ms-1">4</span></span><span class="handheld-toolbar-label">$265.00</span></a></div>
+    </div>
+    <!-- Quay ve dau trang--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
+    <!-- Vendor scrits: js libraries and plugins-->
+    <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/simplebar/dist/simplebar.min.js"></script>
+    <script src="vendor/tiny-slider/dist/min/tiny-slider.js"></script>
+    <script src="vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+    <script src="vendor/card/dist/card.js"></script>
+    <!-- Main theme script-->
+    <script src="js/theme.min.js"></script>
+  </body>
+</html>
