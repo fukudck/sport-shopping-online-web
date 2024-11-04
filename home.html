@@ -36,6 +36,7 @@
 	<body class="handheld-toolbar-enabled">
 		<main class="page-wrapper">
 			<!-- Navbar 3 Level (Light)-->
+			 	<div id="header"></div>
 				<section class="tns-carousel tns-controls-lg">
 					<div class="tns-carousel-inner"
 						data-carousel-options="{&quot;mode&quot;: &quot;gallery&quot;, &quot;responsive&quot;: {&quot;0&quot;:{&quot;nav&quot;:true, &quot;controls&quot;: false},&quot;992&quot;:{&quot;nav&quot;:false, &quot;controls&quot;: true}}}">
@@ -332,6 +333,7 @@
 				</section>
 			</main>
 			<!-- Footer-->
+			 <div id="footer"></div>
 				<!-- Toolbar for handheld devices (Default)-->
 				<div class="handheld-toolbar">
 					<div class="d-table table-layout-fixed w-100"><a
@@ -355,6 +357,16 @@
 						class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i
 						class="btn-scroll-top-icon ci-arrow-up"> </i></a>
 				<!-- Vendor scrits: js libraries and plugins-->
+				<script>
+					async function loadComponent(id, file) {
+						const response = await fetch(file);
+						const html = await response.text();
+						document.getElementById(id).innerHTML = html;
+					}
+		
+					loadComponent("header", "header.html");
+					loadComponent("footer", "footer.html");
+				</script>
 				<script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 				<script src="vendor/simplebar/dist/simplebar.min.js"></script>
 				<script src="vendor/tiny-slider/dist/min/tiny-slider.js"></script>
