@@ -9,10 +9,33 @@
 
   $offset = ($page - 1) * $products_per_page;
 
+  $sort_by_price = "p.product_id";
+
+  if(isset($_GET['price'])) {
+    switch($_GET['price']) {
+      case "asc":
+        $sort_by_price = "p.price ASC";
+        break;
+      case "desc":
+        $sort_by_price = "p.price DESC";
+        break;
+      default:
+        $sort_by_price = "p.product_id";
+    }
+  }
+
+  $where_sql_category = "";
+
+  // if (isset($_GET['category'])) {
+  //   $where_sql_category = "WHERE p.category_id = " . $_GET['category'];
+  //   echo $where_sql_category;
+  // }
+
   $sql = "SELECT p.*, c.category_name 
     FROM products p 
     JOIN categories c ON p.category_id = c.category_id 
-    ORDER BY p.product_id 
+    $where_sql_category
+    ORDER BY $sort_by_price
     LIMIT ?, ?";
   $stmt = $conn->prepare($sql);
   $stmt->bind_param("ii", $offset, $products_per_page);
@@ -73,6 +96,8 @@
     />
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="css/theme.min.css" />
+
+    
   </head>
   <!-- Body-->
   <body class="handheld-toolbar-enabled">
@@ -104,13 +129,11 @@
               <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
                   <label class="text-light fs-sm opacity-75 text-nowrap me-2 d-none d-sm-block" for="sorting">Sắp xếp theo:</label>
-                  <select class="form-select" id="sorting">
-                    <option>Popularity</option>
-                    <option>Low - Hight Price</option>
-                    <option>High - Low Price</option>
-                    <option>Average Rating</option>
-                    <option>A - Z Order</option>
-                    <option>Z - A Order</option>
+                  <select class="form-select" id="sorting" onchange="handleSortingChange()">
+                    <option>Mặc định</option>
+                    <option value="asc" <?php echo isset($_GET['price']) && $_GET['price'] === 'asc' ? 'selected' : '';?> >Giá: Thấp đến Cao</option>
+                    <option value="desc" <?php echo isset($_GET['price']) && $_GET['price'] === 'desc' ? 'selected' : '';?>>Giá: Cao đến Thấp</option>
+
                   </select>
                 </div>
               </div>
@@ -150,19 +173,21 @@
                 <li class="page-item"><a class="page-link"  href="product.php?&page=1"><i class="ci-arrow-left me-2"></i>Trang đầu</a></li>
               </ul>
               <ul class="pagination">
-
+                
                 <?php 
                   $startPage = max(1, $page - floor(5 / 2));
                   $endPage = min($total_pages, $startPage + 5 - 1);
                   for ($i = $startPage; $i <= $endPage; $i++) {
                 ?>
-                <li class="page-item <?php if($page == $i) echo "active" ?> d-none d-sm-block"><a  href="product.php?&page=<?php echo $i?>" class="page-link"><?php echo $i ?></a></li>
+                <li class="page-item <?php if($page == $i) echo "active" ?> d-none d-sm-block"><a  onclick="updateURL('page', <?php echo $i ?>, url)" class="page-link"><?php echo $i ?></a></li>
                 <?php } ?>
               </ul>
               <ul class="pagination">
                 <li class="page-item"><a class="page-link"  href="product.php?&page=<?php echo $total_pages?>" aria-label="Next">Trang cuối<i class="ci-arrow-right ms-2"></i></a></li>
               </ul>
             </nav>
+
+            
           </section>
           <!-- Sidebar-->
           <aside class="col-lg-4">
@@ -829,6 +854,34 @@
 
       loadComponent("header", "header.html");
       loadComponent("footer", "footer.html");
+    </script>
+    <script>
+        function handleSortingChange() {
+            const sorting = document.getElementById("sorting").value;
+            url.searchParams.delete("page"); // Xóa tham số 'page'
+
+            if (sorting === "asc" || sorting === "desc") {
+                updateURL("price", sorting, url);
+                
+            } else {
+                url.searchParams.delete("price");
+                window.location.href = url.toString();
+            }
+        }
+    </script>
+    <script>
+        const url = new URL(window.location.href);
+        function updateURL(param, value, url) {
+            // Lấy URL hiện tại
+            if(url == 'undefined') {
+              const url = new URL(window.location.href);
+            }
+            // Cập nhật hoặc thêm biến GET
+            url.searchParams.set(param, value);
+
+            // Chuyển hướng đến URL mới
+            window.location.href = url.toString();
+        }
     </script>
     <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/simplebar/dist/simplebar.min.js"></script>
