@@ -197,15 +197,6 @@
               id="shop-sidebar"
               style="max-width: 22rem"
             >
-              <div class="offcanvas-header align-items-center shadow-sm">
-                <h2 class="h5 mb-0">Filters</h2>
-                <button
-                  class="btn-close ms-auto"
-                  type="button"
-                  data-bs-dismiss="offcanvas"
-                  aria-label="Close"
-                ></button>
-              </div>
               <div class="offcanvas-body py-grid-gutter px-lg-grid-gutter">
                 <!-- Categories-->
                 <div class="widget widget-categories mb-4 pb-4 border-bottom">
@@ -249,6 +240,7 @@
                               data-simplebar
                               data-simplebar-auto-hide="false"
                             >
+
                               <li class="widget-list-item widget-filter-item">
                                 <a
                                   class="widget-list-link d-flex justify-content-between align-items-center"
@@ -257,242 +249,17 @@
                                   <span class="widget-filter-item-text"
                                     >Xem tất cả</span
                                   >
-                                  <span class="fs-xs text-muted ms-3"
-                                    >1,953</span
-                                  >
                                 </a>
                               </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Bóng đá</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">156</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Chạy bộ</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">156</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Dép</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">156</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Golf</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">156</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Tennis</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">156</span>
-                                </a>
-                              </li>
+                              
                             </ul>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- Quần -->
-                    <div class="accordion-item">
-                      <h3 class="accordion-header">
-                        <a
-                          class="accordion-button collapsed"
-                          href="#pants"
-                          role="button"
-                          data-bs-toggle="collapse"
-                          aria-expanded="false"
-                          aria-controls="pants"
-                          >Quần</a
-                        >
-                      </h3>
-                      <div
-                        class="accordion-collapse collapse"
-                        id="pants"
-                        data-bs-parent="#shop-categories"
-                      >
-                        <div class="accordion-body">
-                          <div class="widget widget-links widget-filter">
-                            <div class="input-group input-group-sm mb-2">
-                              <input
-                                class="widget-filter-search form-control rounded-end"
-                                type="text"
-                                placeholder="Tìm kiếm"
-                              />
-                              <i
-                                class="ci-search position-absolute top-50 end-0 translate-middle-y fs-sm me-3"
-                              ></i>
-                            </div>
-                            <ul
-                              class="widget-list widget-filter-list pt-1"
-                              style="height: 6rem"
-                              data-simplebar
-                              data-simplebar-auto-hide="false"
-                            >
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Xem tất cả</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">801</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Jeans</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">238</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Quần bơi</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">116</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Quần dài</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">104</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Quần thể thao</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">115</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Quần shorts</span
-                                  >
-                                  <span class="fs-xs text-muted ms-3">17</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    
                     <!-- Phụ kiện -->
-                    <div class="accordion-item">
-                      <h3 class="accordion-header">
-                        <a
-                          class="accordion-button collapsed"
-                          href="#accessories"
-                          role="button"
-                          data-bs-toggle="collapse"
-                          aria-expanded="false"
-                          aria-controls="accessories"
-                          >Phụ kiện</a
-                        >
-                      </h3>
-                      <div
-                        class="accordion-collapse collapse"
-                        id="accessories"
-                        data-bs-parent="#shop-categories"
-                      >
-                        <div class="accordion-body">
-                          <div class="widget widget-links">
-                            <ul class="widget-list">
-                              <li class="widget-list-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span>Xem tất cả</span>
-                                  <span class="fs-xs text-muted ms-3"
-                                    >1,842</span
-                                  >
-                                </a>
-                              </li>
-                              <li class="widget-list-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span>Balo</span>
-                                  <span class="fs-xs text-muted ms-3">953</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span>Nón</span>
-                                  <span class="fs-xs text-muted ms-3">589</span>
-                                </a>
-                              </li>
-                              <li class="widget-list-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span>Vớ</span>
-                                  <span class="fs-xs text-muted ms-3">300</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
                 <!-- Filter by Size-->
