@@ -159,9 +159,9 @@
               <!-- Product-->
               <div class="col-md-4 col-sm-6 px-2 mb-4">
                 <div class="card product-card">
-                  <a class="card-img-top d-block overflow-hidden" href="shop-single-v1.html"><img src="img/shop/catalog/01.jpg" alt="Product"></a>
-                  <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#"><?php echo $product['category_name'] ?></a>
-                    <h3 class="product-title fs-sm"><a href="shop-single-v1.html"><?php echo $product['name'] ?></a></h3>
+                  <a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="img/shop/catalog/01.jpg" alt="Product"></a>
+                  <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
+                    <h3 class="product-title fs-sm"><a href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><?php echo $product['name'] ?></a></h3>
                     <div class="d-flex justify-content-between">
                       <div class="product-price"><span class="text-accent"><?php echo (int)$product['price'] ?><small>.000</small><sup>đ</sup></span></div>
                       
@@ -169,7 +169,7 @@
                   </div>
                   <div class="card-body card-body-hidden">
                     
-                    <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-eye fs-sm me-1"></i>Xem chi tiết</button>
+                    <button  onclick="location.href='product_detail.php?&product_id=<?php echo $product['product_id'] ?>'" class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-eye fs-sm me-1"></i>Xem chi tiết</button>
                     
                   </div>
                 </div>
