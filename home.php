@@ -19,14 +19,6 @@
 		$products[] = $row; // Thêm từng dòng vào mảng
 	}
 
-
-
-
-
-
-
-
-
 ?>
 
 
@@ -133,7 +125,7 @@
 					
 				</div>
 				<div class="text-center pt-3"><a class="btn btn-outline-accent"
-						href="shop-grid-ls.html">Sản phẩm khác<i
+						href="product.php">Sản phẩm khác<i
 							class="ci-arrow-right ms-1"></i></a></div>
 			</section>
 				<!-- Banners-->

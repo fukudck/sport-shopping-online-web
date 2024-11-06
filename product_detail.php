@@ -1,8 +1,50 @@
+<?php 
+  require_once('php/conn.php');
+  if (!isset($_GET['product_id'])) {
+	header("Location: product.php");
+  }
+
+  $sql = "SELECT * FROM products WHERE product_id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $_GET['product_id']);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($result->num_rows > 0) { 
+	$product = $result->fetch_assoc();
+	$sizes = json_decode($product['sizes']);
+  }
+  else {
+	header("Location: product.php");
+  }
+  
+  	// 8 SP ngẫu nhiên cùng category
+	$also_like_stmt = $conn->prepare("
+		SELECT p.*, c.category_name 
+		FROM products p 
+		JOIN categories c ON p.category_id = c.category_id 
+		WHERE p.category_id = ".$product['category_id']."
+		ORDER BY RAND() 
+		LIMIT 8
+	");
+	$also_like_stmt->execute();
+	$also_like_result = $also_like_stmt->get_result();
+
+	$also_like_products = []; // Khởi tạo mảng để lưu trữ sản phẩm
+
+	while ($row = $also_like_result->fetch_assoc()) {
+		$also_like_products[] = $row; // Thêm từng dòng vào mảng
+	}
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Cartzilla | Sports Hooded Sweatshirt</title>
+		<title><?php echo $product['name'] ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- Favicon and Touch Icons-->
 		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -53,8 +95,7 @@
 										class="ci-home"></i> Trang chủ</a></li>
 							<li class="breadcrumb-item"><a href="#" class="text-light">Sản
 									phẩm</a></li>
-							<li class="breadcrumb-item active text-light" aria-current="page">Chi
-								tiết sản phẩm</li>
+							<li class="breadcrumb-item active text-light" aria-current="page"><?php echo $product['name'] ?></li>
 						</ol>
 					</nav>
 				</div>
@@ -110,14 +151,13 @@
 								<div class="product-details ms-auto pb-3">
 									<div
 										class="product-info d-flex justify-content-between align-items-center mb-3">
-										<h1 class="product-title h4 mb-0 text-center text-md-start">Tên sản
-											phẩm</h1>
+										<h1 class="product-title h4 mb-0 text-center text-md-start"><?php echo $product['name'] ?></h1>
 											
 									</div>
 									<div class="price-display mb-3">
 										
-										<span class="product-detail-price h3 fw-bold text-accent me-1">{giá }<sup>đ</sup></span>
-										<div class="badge bg-success badge-shadow d-md-inline-block text-center" style=" height: 25px; line-height: 25px"><i class="ci-security-check"></i> Còn hàng</div>
+										<span class="product-detail-price h3 fw-bold text-accent me-1"><?php echo (int)$product['price'] ?>.000<sup>đ</sup></span>
+										<div class="badge <?php echo ($product['stock_quantity']>0) ? 'bg-success' : 'bg-danger'; ?> badge-shadow d-md-inline-block text-center" style=" height: 25px; line-height: 25px"><i class="<?php echo ($product['stock_quantity']>0) ? 'ci-security-check' : 'ci-security-close'; ?>"></i> <?php echo ($product['stock_quantity']>0) ? 'Còn hàng' : 'Hết hàng'; ?></div>
 
 
 									</div>
@@ -129,13 +169,12 @@
 													data-bs-toggle="modal"><i
 														class="ci-ruler lead align-middle me-1 mt-n1"></i>Xem</a>											
 											</div>
-											<select class="form-select" required id="product-size">
+											<select class="form-select" id="product-size" <?php if (empty($sizes)) { echo 'hidden';} else {echo 'required';}?>>
 												<option value>Chọn size</option>
-												<option value="xs">XS</option>
-												<option value="s">S</option>
-												<option value="m">M</option>
-												<option value="l">L</option>
-												<option value="xl">XL</option>
+												<?php foreach ($sizes as $size) { ?>
+													<option value="<?php echo htmlspecialchars($size)?>"><?php echo htmlspecialchars($size)?></option>
+													
+												<?php } ?>
 											</select>
 										</div>
 										<div class="mb-3 d-flex align-items-center">
@@ -165,7 +204,7 @@
 												}
 											</script>
 											<button class="btn btn-accent btn-shadow d-block w-100"
-												type="submit"><i class="ci-cart fs-lg me-2"></i>Thêm vào giỏ
+												type="submit" <?php echo ($product['stock_quantity']>0) ? '' : 'disabled'; ?>><i class="ci-cart fs-lg me-2" ></i>Thêm vào giỏ
 												hàng</button>
 										</div>
 									</form>
@@ -184,15 +223,8 @@
 											<div class="accordion-collapse collapse show" id="productInfo"
 												data-bs-parent="#productPanels">
 												<div class="accordion-body">
-													<h6 class="fs-sm mb-2">Thành phần</h6>
 													<ul class="fs-sm ps-4">
-														<li>Elastic rib: Cotton 95%, Elastane 5%</li>
-														<li>Lining: Cotton 100%</li>
-														<li>Cotton 80%, Polyester 20%</li>
-													</ul>
-													<h6 class="fs-sm mb-2">Art. No.</h6>
-													<ul class="fs-sm ps-4 mb-0">
-														<li>183260098</li>
+														<li><?php echo $product['description'] ?></li>
 													</ul>
 												</div>
 											</div>
@@ -227,7 +259,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="accordion-item">
+										<!--  Tạm thời không dùng <div class="accordion-item">
 											<h3 class="accordion-header">
 												<a class="accordion-button collapsed" href="#localStore"
 													role="button" data-bs-toggle="collapse" aria-expanded="true"
@@ -246,82 +278,15 @@
 													</select>
 												</div>
 											</div>
-										</div>
+										</div> -->
 									</div>
 								</div>
 							</div>
 						</div>
 						<!-- Product description section 1-->
-						<div class="row align-items-center py-md-3">
-							<div class="col-lg-5 col-md-6 offset-lg-1 order-md-2"><img
-									class="d-block rounded-3" src="img/shop/single/prod-img.jpg"
-									alt="Image"></div>
-							<div class="col-lg-4 col-md-6 offset-lg-1 py-4 order-md-1">
-								<h2 class="h3 mb-4 pb-2">High quality materials</h2>
-								<h6 class="fs-base mb-3">Soft cotton blend</h6>
-								<p class="fs-sm text-muted pb-2">Lorem ipsum dolor sit amet, consectetur
-									adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-									magna aliqua. Duis aute irure dolor in reprehenderit.</p>
-								<h6 class="fs-base mb-3">Washing instructions</h6>
-								<ul class="nav nav-tabs mb-3" role="tablist">
-									<li class="nav-item"><a class="nav-link active" href="#wash"
-											data-bs-toggle="tab" role="tab"><i
-												class="ci-wash fs-xl"></i></a></li>
-									<li class="nav-item"><a class="nav-link" href="#bleach"
-											data-bs-toggle="tab" role="tab"><i
-												class="ci-bleach fs-xl"></i></a></li>
-									<li class="nav-item"><a class="nav-link" href="#hand-wash"
-											data-bs-toggle="tab" role="tab"><i
-												class="ci-hand-wash fs-xl"></i></a></li>
-									<li class="nav-item"><a class="nav-link" href="#ironing"
-											data-bs-toggle="tab" role="tab"><i
-												class="ci-ironing fs-xl"></i></a></li>
-									<li class="nav-item"><a class="nav-link" href="#dry-clean"
-											data-bs-toggle="tab" role="tab"><i
-												class="ci-dry-clean fs-xl"></i></a></li>
-								</ul>
-								<div class="tab-content text-muted fs-sm">
-									<div class="tab-pane fade show active" id="wash" role="tabpanel">30°
-										mild machine washing</div>
-									<div class="tab-pane fade" id="bleach" role="tabpanel">Do not use any
-										bleach</div>
-									<div class="tab-pane fade" id="hand-wash" role="tabpanel">Hand wash
-										normal (30°)</div>
-									<div class="tab-pane fade" id="ironing" role="tabpanel">Low temperature
-										ironing</div>
-									<div class="tab-pane fade" id="dry-clean" role="tabpanel">Do not dry
-										clean</div>
-								</div>
-							</div>
-						</div>
-						<!-- Product description section 2-->
-						<div class="row align-items-center py-4 py-lg-5">
-							<div class="col-lg-5 col-md-6 offset-lg-1"><img class="d-block rounded-3"
-									src="img/shop/single/prod-map.png" alt="Map"></div>
-							<div class="col-lg-4 col-md-6 offset-lg-1 py-4">
-								<h2 class="h3 mb-4 pb-2">Where is it made?</h2>
-								<h6 class="fs-base mb-3">Mô tả.</h6>
-								<p class="fs-sm text-muted pb-2">Mô tả</p>
-								<div class="d-flex mb-2">
-									<div class="me-4 pe-2 text-center">
-										<h4 class="h2 text-accent mb-1">3258</h4>
-										<p>Workers</p>
-									</div>
-									<div class="me-4 pe-2 text-center">
-										<h4 class="h2 text-accent mb-1">43%</h4>
-										<p>Female</p>
-									</div>
-									<div class="text-center">
-										<h4 class="h2 text-accent mb-1">57%</h4>
-										<p>Male</p>
-									</div>
-								</div>
-								<h6 class="fs-base mb-3">Mô tả</h6>
-								<p class="fs-sm text-muted pb-md-2">​Lorem ipsum dolor sit amet,
-									consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-									et dolore.</p>
-							</div>
-						</div>
+
+						<!-- Product END description section 1-->
+						
 					</div>
 					<!-- Product carousel (You may also like)-->
 					<div class="container py-5 my-md-3">
@@ -330,6 +295,7 @@
 							<div class="tns-carousel-inner"
 								data-carousel-options="{&quot;items&quot;: 2, &quot;controls&quot;: true, &quot;nav&quot;: false, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 18},&quot;768&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 20}, &quot;1100&quot;:{&quot;items&quot;:4, &quot;gutter&quot;: 30}}}">
 								<!-- Product-->
+								<?php foreach ($also_like_products as $also_like_product) { ?>
 								<div>
 									<div class="card product-card card-static border">
 										<a class="card-img-top d-block overflow-hidden" href="#">
@@ -339,111 +305,23 @@
 											<a
 												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
 												href="#">
-												Danh mục sản phẩm
+												<?php echo $also_like_product['category_name'] ?>
 											</a>
 											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none">Tên sản phẩm</a>
+												<a href="#" class="text-dark text-decoration-none"><?php echo $also_like_product['name'] ?></a>
 											</h3>
 											<div class="d-flex justify-content-between align-items-center">
 												<div class="product-price">
-													<span class="text-accent">đ240.<small>099</small></span>
+												<div class="product-price"><span
+													class="text-accent"><?php echo (int)$also_like_product['price'] ?><small>.000<sup>đ</sup></small></span></div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
+								<?php } ?>
 								<!-- Product-->
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="#">
-											<img src="img/shop/catalog/20.jpg" alt="Product">
-										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
-												href="#">
-												Danh mục sản phẩm
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none">Tên sản phẩm</a>
-											</h3>
-											<div class="d-flex justify-content-between align-items-center">
-												<div class="product-price">
-													<span class="text-accent">đ240.<small>099</small></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- Product-->
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="#">
-											<img src="img/shop/catalog/20.jpg" alt="Product">
-										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
-												href="#">
-												Danh mục sản phẩm
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none">Tên sản phẩm</a>
-											</h3>
-											<div class="d-flex justify-content-between align-items-center">
-												<div class="product-price">
-													<span class="text-accent">đ240.<small>099</small></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- Product-->
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="#">
-											<img src="img/shop/catalog/20.jpg" alt="Product">
-										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
-												href="#">
-												Danh mục sản phẩm
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none">Tên sản phẩm</a>
-											</h3>
-											<div class="d-flex justify-content-between align-items-center">
-												<div class="product-price">
-													<span class="text-accent">đ240.<small>099</small></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- Product-->
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="#">
-											<img src="img/shop/catalog/20.jpg" alt="Product">
-										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
-												href="#">
-												Danh mục sản phẩm
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none">Tên sản phẩm</a>
-											</h3>
-											<div class="d-flex justify-content-between align-items-center">
-												<div class="product-price">
-													<span class="text-accent">đ240.<small>099</small></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+								
 							</div>
 						</div>
 					</div>
