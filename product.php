@@ -26,10 +26,9 @@
 
   $where_sql_category = "";
 
-  // if (isset($_GET['category'])) {
-  //   $where_sql_category = "WHERE p.category_id = " . $_GET['category'];
-  //   echo $where_sql_category;
-  // }
+  if (isset($_GET['category_id'])) {
+    $where_sql_category = "WHERE p.category_id = " . $_GET['category_id'];
+  }
 
   $sql = "SELECT p.*, c.category_name 
     FROM products p 
@@ -54,6 +53,20 @@
   $total_products = $total_row['total'];
 
   $total_pages = ceil($total_products / $products_per_page);
+
+  $categories = [];
+  $sub_categories = [];
+  $category_stmt = $conn->prepare("SELECT * FROM categories");
+	$category_stmt->execute();
+  $category_result = $category_stmt->get_result();
+
+  while ($row = $category_result->fetch_assoc()) {
+    if ($row['parent_category_id'] == NULL) {
+      $categories[] = $row; // Thêm từng dòng vào mảng
+    } else {
+      $sub_categories[] = $row;
+    }
+	}
 ?>
 
 
@@ -156,7 +169,7 @@
                   </div>
                   <div class="card-body card-body-hidden">
                     
-                    <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-cart fs-sm me-1"></i>Thêm vào giỏ hàng</button>
+                    <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-eye fs-sm me-1"></i>Xem chi tiết</button>
                     
                   </div>
                 </div>
@@ -204,22 +217,25 @@
                     <span class="badge bg-primary badge-shadow">Thể loại</span>
                   </h3>
                   <div class="accordion mt-n1" id="shop-categories">
-                    <!-- Giày -->
+
+                  <?php foreach ($categories as $category) { 
+?>
+                    <!-- Category -->
                     <div class="accordion-item">
                       <h3 class="accordion-header">
                         <a
                           class="accordion-button collapsed"
-                          href="#shoes"
+                          href="#category_id_<?php echo $category['category_id']?>"
                           role="button"
                           data-bs-toggle="collapse"
                           aria-expanded="false"
-                          aria-controls="shoes"
-                          >Giày</a
+                          aria-controls="<?php echo $category['category_id']?>"
+                          ><?php echo $category['category_name']  ?></a
                         >
                       </h3>
                       <div
                         class="accordion-collapse collapse"
-                        id="shoes"
+                        id="category_id_<?php echo $category['category_id']?>"
                         data-bs-parent="#shop-categories"
                       >
                         <div class="accordion-body">
@@ -240,341 +256,34 @@
                               data-simplebar
                               data-simplebar-auto-hide="false"
                             >
-
-                              <li class="widget-list-item widget-filter-item">
-                                <a
-                                  class="widget-list-link d-flex justify-content-between align-items-center"
-                                  href="#"
-                                >
-                                  <span class="widget-filter-item-text"
-                                    >Xem tất cả</span
+                              <?php foreach ($sub_categories as $sub_category) { 
+                                  if ($sub_category['parent_category_id'] != $category['category_id']) {
+                                    continue;
+                                  }
+                                  ?>
+                                <li class="widget-list-item widget-filter-item">
+                                  <a
+                                    class="widget-list-link d-flex justify-content-between align-items-center"
+                                    onclick="updateURL('category_id', <?php echo $sub_category['category_id'] ?>, url)"
                                   >
-                                </a>
-                              </li>
+                                    <span class="widget-filter-item-text"><?php echo $sub_category['category_name']?></span>
+                                  </a>
+                                </li>
+                              <?php } ?>
                               
                             </ul>
                           </div>
                         </div>
                       </div>
                     </div>
-                    
-                    <!-- Phụ kiện -->
+                    <?php } ?>
+                    <!-- End-Category -->
                     
                   </div>
                 </div>
-                <!-- Filter by Size-->
-                <div class="widget widget-filter mb-4 pb-4 border-bottom">
-                  <h3 class="widget-title">
-                    <span class="display-3 badge bg-accent badge-shadow"
-                      >Size</span
-                    >
-                  </h3>
-                  <div class="input-group input-group-sm mb-2">
-                    <input
-                      class="widget-filter-search form-control rounded-end pe-5"
-                      type="text"
-                      placeholder="Tìm kiếm"
-                    /><i
-                      class="ci-search position-absolute top-50 end-0 translate-middle-y fs-sm me-3"
-                    ></i>
-                  </div>
-                  <ul
-                    class="widget-list widget-filter-list list-unstyled pt-1"
-                    style="max-height: 11rem"
-                    data-simplebar
-                    data-simplebar-auto-hide="false"
-                  >
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-xs"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-xs"
-                          >XS</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">34</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-s"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-s"
-                          >S</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">57</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-m"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-m"
-                          >M</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">198</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-l"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-l"
-                          >L</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">72</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-xl"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-xl"
-                          >XL</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">46</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-39"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-39"
-                          >39</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">112</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-40"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-40"
-                          >40</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">85</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-41"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-40"
-                          >41</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">210</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-42"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-42"
-                          >42</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">57</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-43"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-43"
-                          >43</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">30</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-44"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-44"
-                          >44</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">61</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-45"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-45"
-                          >45</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">23</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-46"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-46"
-                          >46</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">19</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-47"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-47"
-                          >47</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">15</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-48"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-48"
-                          >48</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">12</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center mb-1"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-49"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-49"
-                          >49</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">8</span>
-                    </li>
-                    <li
-                      class="widget-filter-item d-flex justify-content-between align-items-center"
-                    >
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="size-50"
-                        />
-                        <label
-                          class="form-check-label widget-filter-item-text"
-                          for="size-50"
-                          >50</label
-                        >
-                      </div>
-                      <span class="fs-xs text-muted">6</span>
-                    </li>
-                  </ul>
-                </div>
+                <!-- Size -->
+
+                <!-- Size -->
               </div>
             </div>
           </aside>
