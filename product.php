@@ -48,9 +48,9 @@
 		$products[] = $row; // Thêm từng dòng vào mảng
 	}
 
-  $total_result = $conn->query("SELECT COUNT(*) AS total FROM products");
-  $total_row = $total_result->fetch_assoc();
-  $total_products = $total_row['total'];
+  $total_result_sql = "SELECT * FROM products p $where_sql_category";
+  $total_result = $conn->query($total_result_sql);
+  $total_products = $total_result->num_rows;
 
   $total_pages = ceil($total_products / $products_per_page);
 
@@ -183,7 +183,7 @@
             <!-- Pagination-->
             <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
               <ul class="pagination">
-                <li class="page-item"><a class="page-link"  href="product.php?&page=1"><i class="ci-arrow-left me-2"></i>Trang đầu</a></li>
+                <li class="page-item"><a class="page-link"  onclick="updateURL('page', 1, url)"><i class="ci-arrow-left me-2"></i>Trang đầu</a></li>
               </ul>
               <ul class="pagination">
                 
@@ -196,7 +196,7 @@
                 <?php } ?>
               </ul>
               <ul class="pagination">
-                <li class="page-item"><a class="page-link"  href="product.php?&page=<?php echo $total_pages?>" aria-label="Next">Trang cuối<i class="ci-arrow-right ms-2"></i></a></li>
+                <li class="page-item"><a class="page-link"  onclick="updateURL('page', <?php echo $total_pages?>, url)" aria-label="Next">Trang cuối<i class="ci-arrow-right ms-2"></i></a></li>
               </ul>
             </nav>
 
