@@ -1,27 +1,44 @@
 <?php 
-  require_once('php/conn.php');
-  if (!isset($_GET['product_id'])) {
-	header("Location: product.php");
-  }
+	require_once('php/conn.php');
+	if (!isset($_GET['product_id'])) {
+		header("Location: product.php");
+	}
 
-  $sql = "SELECT * FROM products WHERE product_id = ?";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("i", $_GET['product_id']);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  if ($result->num_rows > 0) { 
+	$sql = "SELECT * FROM products WHERE product_id = ?";
+	$stmt = $conn->prepare($sql);
+	$stmt->bind_param("i", $_GET['product_id']);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	if ($result->num_rows > 0) { 
 	$product = $result->fetch_assoc();
 	$sizes = json_decode($product['sizes']);
-  }
-  else {
-	header("Location: product.php");
-  }
-  
+	}
+	else {
+		header("Location: product.php");
+	}
+	$image_sql = "SELECT image_url, image_id FROM product_images WHERE product_id = ?";
+	$image_sql_stmt = $conn->prepare($image_sql);
+	$image_sql_stmt->bind_param("i", $_GET['product_id']);
+	$image_sql_stmt->execute();
+	$image_sql_result = $image_sql_stmt->get_result();
+	$image_urls = array();
+
+	// Lấy tất cả các hình ảnh vào mảng
+	while ($row = $image_sql_result->fetch_assoc()) {
+		$image_urls[] = $row;
+	}
+
+
   	// 8 SP ngẫu nhiên cùng category
 	$also_like_stmt = $conn->prepare("
-		SELECT p.*, c.category_name 
+		SELECT p.*, c.category_name , pi.image_url
 		FROM products p 
 		JOIN categories c ON p.category_id = c.category_id 
+		LEFT JOIN (
+			SELECT product_id, MIN(image_url) AS image_url
+			FROM product_images
+			GROUP BY product_id
+		) pi ON p.product_id = pi.product_id
 		WHERE p.category_id = ".$product['category_id']."
 		ORDER BY RAND() 
 		LIMIT 8
@@ -109,40 +126,22 @@
 							<div class="col-lg-7 pe-lg-0 pt-lg-4">
 								<div class="product-gallery">
 									<div class="product-gallery-preview order-sm-2">
-										<div class="product-gallery-preview-item active" id="first"><img
-												class="image-zoom" src="img/shop/single/gallery/01.jpg"
-												data-zoom="img/shop/single/gallery/01.jpg" alt="Product image">
-											<div class="image-zoom-pane"></div>
-										</div>
-										<div class="product-gallery-preview-item" id="second"><img
-												class="image-zoom" src="img/shop/single/gallery/02.jpg"
-												data-zoom="img/shop/single/gallery/02.jpg" alt="Product image">
-											<div class="image-zoom-pane"></div>
-										</div>
-										<div class="product-gallery-preview-item" id="third"><img
-												class="image-zoom" src="img/shop/single/gallery/03.jpg"
-												data-zoom="img/shop/single/gallery/03.jpg" alt="Product image">
-											<div class="image-zoom-pane"></div>
-										</div>
-										<div class="product-gallery-preview-item" id="fourth"><img
-												class="image-zoom" src="img/shop/single/gallery/04.jpg"
-												data-zoom="img/shop/single/gallery/04.jpg" alt="Product image">
-											<div class="image-zoom-pane"></div>
-										</div>
+										<?php 
+										$flag = false;
+										foreach ($image_urls as $image) { ?>
+											<div class="product-gallery-preview-item <?php if (!$flag) { echo 'active'; $flag = true;} ?>" id="product_image_<?php echo $image['image_id'] ?>"><img class="image-zoom" src="<?php echo $image['image_url'] ?>" alt="Product image">
+											</div>
+										
+										<?php } ?>
 									</div>
-									<div class="product-gallery-thumblist order-sm-1"><a
-											class="product-gallery-thumblist-item active" href="#first"><img
-												src="img/shop/single/gallery/th01.jpg" alt="Product thumb"></a><a
-											class="product-gallery-thumblist-item" href="#second"><img
-												src="img/shop/single/gallery/th02.jpg" alt="Product thumb"></a><a
-											class="product-gallery-thumblist-item" href="#third"><img
-												src="img/shop/single/gallery/th03.jpg" alt="Product thumb"></a><a
-											class="product-gallery-thumblist-item" href="#fourth"><img
-												src="img/shop/single/gallery/th04.jpg" alt="Product thumb"></a><a
-											class="product-gallery-thumblist-item video-item"
-											href="https://www.youtube.com/watch?v=1vrXpMLLK14">
-											<div class="product-gallery-thumblist-item-text"><i
-													class="ci-video"></i>Video</div></a></div>
+									<div class="product-gallery-thumblist order-sm-1">
+										<?php 
+										$flag = false;
+										foreach ($image_urls as $image2) { ?>
+										<a class="product-gallery-thumblist-item <?php if (!$flag) { echo 'active'; $flag = true;} ?>" href="#product_image_<?php echo $image2['image_id'] ?>">
+											<img src="<?php echo $image2['image_url'] ?>" ></a>
+										<?php } ?>
+									</div>
 								</div>
 							</div>
 							<!-- Product details-->
@@ -298,17 +297,16 @@
 								<?php foreach ($also_like_products as $also_like_product) { ?>
 								<div>
 									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="#">
-											<img src="img/shop/catalog/20.jpg" alt="Product">
+										<a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>">
+											<img src="<?php echo $also_like_product['image_url'] ?>" alt="Product">
 										</a>
 										<div class="card-body py-2">
 											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted"
-												href="#">
+												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted">
 												<?php echo $also_like_product['category_name'] ?>
 											</a>
 											<h3 class="product-title fs-sm mb-2">
-												<a href="#" class="text-dark text-decoration-none"><?php echo $also_like_product['name'] ?></a>
+												<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>" class="text-dark text-decoration-none"><?php echo $also_like_product['name'] ?></a>
 											</h3>
 											<div class="d-flex justify-content-between align-items-center">
 												<div class="product-price">

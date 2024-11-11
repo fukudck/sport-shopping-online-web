@@ -63,14 +63,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->close();
 
-    $remember_me = isset($_POST['remember_me']) ? true : false;
 
     // Gọi hàm signin
-    $error_message = signin($conn, $email, $password, $remember_me);
+    $error_message = signin($conn, $email, $password);
     if (isset($error_message)) {
-        echo $error_message; // Hiển thị thông báo lỗi nếu có
+        echo $error_message;
     }
     
+}
+else {
+    header("Location: ../account-signin.php");
 }
 $conn->close();
 

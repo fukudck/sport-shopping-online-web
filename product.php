@@ -30,9 +30,14 @@
     $where_sql_category = "WHERE p.category_id = " . $_GET['category_id'];
   }
 
-  $sql = "SELECT p.*, c.category_name 
+  $sql = "SELECT p.*, c.category_name, pi.image_url
     FROM products p 
     JOIN categories c ON p.category_id = c.category_id 
+    LEFT JOIN (
+			SELECT product_id, MIN(image_url) AS image_url
+			FROM product_images
+			GROUP BY product_id
+		) pi ON p.product_id = pi.product_id
     $where_sql_category
     ORDER BY $sort_by_price
     LIMIT ?, ?";
@@ -159,7 +164,7 @@
               <!-- Product-->
               <div class="col-md-4 col-sm-6 px-2 mb-4">
                 <div class="card product-card">
-                  <a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="img/shop/catalog/01.jpg" alt="Product"></a>
+                  <a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="<?php echo $product['image_url'] ?>" alt="Product"></a>
                   <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
                     <h3 class="product-title fs-sm"><a href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><?php echo $product['name'] ?></a></h3>
                     <div class="d-flex justify-content-between">
@@ -218,8 +223,7 @@
                   </h3>
                   <div class="accordion mt-n1" id="shop-categories">
 
-                  <?php foreach ($categories as $category) { 
-?>
+                  <?php foreach ($categories as $category) { ?>
                     <!-- Category -->
                     <div class="accordion-item">
                       <h3 class="accordion-header">

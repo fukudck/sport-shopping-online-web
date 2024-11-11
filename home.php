@@ -4,11 +4,18 @@
 	// 8 SP ngẫu nhiên
 	// Sử dụng Prepared Statements để tránh SQL injection
     $stmt = $conn->prepare("
-		SELECT p.*, c.category_name 
-		FROM products p 
-		JOIN categories c ON p.category_id = c.category_id 
-		ORDER BY RAND() 
-		LIMIT 8
+		SELECT p.*, c.category_name, pi.image_url
+		FROM products p
+		JOIN categories c ON p.category_id = c.category_id
+		LEFT JOIN (
+			SELECT product_id, MIN(image_url) AS image_url
+			FROM product_images
+			GROUP BY product_id
+		) pi ON p.product_id = pi.product_id
+		ORDER BY RAND()
+		LIMIT 8;
+
+
 	");
     $stmt->execute();
     $result = $stmt->get_result();
@@ -105,7 +112,7 @@
 						<div class="card product-card">
 							<a
 								class="card-img-top d-block overflow-hidden"
-								href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="img/shop/catalog/01.jpg"
+								href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="<?php echo $product['image_url'] ?>"
 									alt="Product"></a>
 							<div class="card-body py-2"><a
 									class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
