@@ -1,5 +1,5 @@
 <?php 
-function signin($conn, $email, $password, $remember_me) {
+function signin($conn, $email, $password) {
     // Làm sạch dữ liệu email và password
     $email = sanitize($email);
     $password_hash = hash('sha256', sanitize($password));
@@ -21,11 +21,10 @@ function signin($conn, $email, $password, $remember_me) {
             'logged_in' => true
         ];
   
-        // Chuyển hướng đến trang khác
-        header("Location: ../test.php");
+        header("Location: ../home.php");
 
         
-        exit(); // Dừng thực thi sau khi chuyển hướng
+        exit();
     } else {
         return "1";
     }

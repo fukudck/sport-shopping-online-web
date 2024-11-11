@@ -12,21 +12,20 @@ function sanitize($data)
   return $data;
 }
 
-
-
-// Kiểm tra nếu form được gửi đi
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Lấy dữ liệu từ form
+
   $email = $_POST['email'];
   $password = $_POST['password'];
-  $remember_me = isset($_POST['remember_me']) ? true : false;
 
-  // Gọi hàm signin
-  $error_code = signin($conn, $email, $password, $remember_me);
+
+  $error_code = signin($conn, $email, $password);
   if (isset($error_code)) {
       header("Location: ../account-signin.php?error_code=". urlencode($error_code));
 
   }
+}
+else {
+  header("Location: ../account-signin.php");
 }
 $conn->close();
 ?>
