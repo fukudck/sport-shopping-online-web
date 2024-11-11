@@ -1,5 +1,5 @@
-<?php 
-session_start(); 
+<?php
+session_start();
 require_once("conn.php");
 require_once("signin_func.php");
 
@@ -12,8 +12,6 @@ function sanitize($data)
   return $data;
 }
 
-
-
 // Kiểm tra nếu form được gửi đi
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Lấy dữ liệu từ form
@@ -24,9 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Gọi hàm signin
   $error_code = signin($conn, $email, $password, $remember_me);
   if (isset($error_code)) {
-      header("Location: ../account-signin.php?error_code=". urlencode($error_code));
-
+    header("Location: ../account-signin.php?error_code=" . urlencode($error_code));
   }
 }
 $conn->close();
-?>
