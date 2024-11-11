@@ -38,22 +38,17 @@
           <div class="col-md-6">
             <div class="card border-0 shadow">
               <div class="card-body">
-                <h2 class="h4 mb-1">Đăng nhập</h2>
-                <div class="py-3">
-                  <h3 class="d-inline-block align-middle fs-base fw-medium mb-2 me-2">Đăng nhập với:</h3>
-                  <div class="d-inline-block align-middle"><a class="btn-social bs-google me-2 mb-2" href="#" data-bs-toggle="tooltip" title="Sign in with Google"><i class="ci-google"></i></a><a class="btn-social bs-facebook me-2 mb-2" href="#" data-bs-toggle="tooltip" title="Sign in with Facebook"><i class="ci-facebook"></i></a><a class="btn-social bs-twitter me-2 mb-2" href="#" data-bs-toggle="tooltip" title="Sign in with Twitter"><i class="ci-twitter"></i></a></div>
-                </div>
-                <hr>
-                <h3 class="fs-base pt-3 pb-2">Hoặc đăng nhập bằng Email</h3>
-
-
+                <h2 class="h4 mb-4 pt-3">Đăng nhập</h2>
+                <hr class="mb-4">
                 <form class="needs-validation" novalidate method="post" action="php/signin_process.php">
+                  <label class="form-label" for="reg-fn">Email của bạn</label>
                   <div class="input-group mb-3"><i class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
                     <input class="form-control rounded-start" type="email" placeholder="Email của bạn" required name="email">
                   </div>
+                  <label class="form-label" for="reg-fn">Mật khẩu</label>
                   <div class="input-group mb-3"><i class="ci-locked position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
                     <div class="password-toggle w-100">
-                      <input class="form-control" type="password" placeholder="Password" required name="password">
+                      <input class="form-control" type="password" placeholder="Mật khẩu" required name="password">
                       <label class="password-toggle-btn" aria-label="Show/hide password">
                         <input class="password-toggle-check" type="checkbox"><span class="password-toggle-indicator"></span>
                       </label>
@@ -84,7 +79,7 @@
             <div class="card border-0 shadow">
               <div class="card-body">
                 <h2 class="h4 mb-3">Chưa có tài khoản? Đăng ký</h2>
-                <p class="fs-sm text-muted mb-4">Việc đăng ký mất chưa đầy một phút nhưng giúp bạn kiểm soát hoàn toàn đơn hàng của mình.</p>
+                <p class="fs-sm text-muted mb-2">Việc đăng ký mất chưa đầy một phút nhưng giúp bạn kiểm soát hoàn toàn đơn hàng của mình.</p>
 
                 <form class="needs-validation" novalidate method="post" action="php/signup_process.php">
                   <div class="row gx-4 gy-3">
