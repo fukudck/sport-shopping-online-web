@@ -105,30 +105,32 @@
 				<h2 class="h3 text-center">Sản phẩm nổi bật</h2>
 				<div class="row pt-4 mx-n2">
 
-					<?php foreach ($products as $product) { ?>
-
-					<!-- Product-->
-					<div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
-						<div class="card product-card card_container">
-							<a
-								class="card-img-top"
-								href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img class="image_product" src="<?php echo $product['image_url'] ?>"
-									alt="Product"></a>
-							<div class="card-body py-2"><a
-									class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
-								<h3 class="product-title fs-sm"><a
-										href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><?php echo $product['name'] ?></a></h3>
-								<div class="d-flex justify-content-between">
-									<div class="product-price"><span
-											class="text-accent"><?php echo (int)$product['price'] ?><small>.000<sup>đ</sup></small></span></div>
-								</div>
-							</div>
-						</div>
-						<hr class="d-sm-none">
-					</div>
-					
-					<!-- END- Product-->
-					<?php } ?>
+				<?php foreach ($products as $product) { ?>
+    <!-- Product-->
+    <div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+        <div class="card product-card card_container h-100">
+            <a href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>" class="card-img-top">
+                <img class="image_product img-fluid" src="<?php echo $product['image_url'] ?>" alt="Product">
+            </a>
+            <div class="card-body py-2">
+                <a class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
+                <h3 class="product-title fs-sm">
+                    <a href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>">
+                        <?php echo $product['name'] ?>
+                    </a>
+                </h3>
+                <div class="d-flex justify-content-between">
+                    <div class="product-price">
+                        <span class="text-accent">
+                            <?php echo (int)$product['price'] ?><small>.000<sup>đ</sup></small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END- Product-->
+<?php } ?>
 					
 				</div>
 				<div class="text-center pt-3"><a class="btn btn-outline-accent"
