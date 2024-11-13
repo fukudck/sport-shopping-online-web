@@ -109,10 +109,10 @@
 
 					<!-- Product-->
 					<div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
-						<div class="card product-card">
+						<div class="card product-card card_container">
 							<a
-								class="card-img-top d-block overflow-hidden"
-								href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img src="<?php echo $product['image_url'] ?>"
+								class="card-img-top"
+								href="product_detail.php?&product_id=<?php echo $product['product_id'] ?>"><img class="image_product" src="<?php echo $product['image_url'] ?>"
 									alt="Product"></a>
 							<div class="card-body py-2"><a
 									class="product-meta d-block fs-xs pb-1"><?php echo $product['category_name'] ?></a>
