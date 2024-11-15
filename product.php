@@ -1,13 +1,10 @@
 <?php
 require_once('php/conn.php');
-// Số sản phẩm trên mỗi trang
-$products_per_page = 15;
-
+require('php/query_func.php');
+$product_per_page = 15;
 // Lấy số trang hiện tại từ URL (mặc định là trang 1 nếu không có)
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $page = max($page, 1);
-
-$offset = ($page - 1) * $products_per_page;
 
 $sort_by_price = "p.product_id";
 
@@ -24,54 +21,20 @@ if (isset($_GET['price'])) {
   }
 }
 
-$where_sql_category = "";
-
+$category_id = null;
 if (isset($_GET['category_id'])) {
-  $where_sql_category = "WHERE p.category_id = " . $_GET['category_id'];
+  $category_id = $_GET['category_id'];
 }
 
-$sql = "SELECT p.*, c.category_name, pi.image_url
-    FROM products p 
-    JOIN categories c ON p.category_id = c.category_id 
-    LEFT JOIN (
-			SELECT product_id, MIN(image_url) AS image_url
-			FROM product_images
-			GROUP BY product_id
-		) pi ON p.product_id = pi.product_id
-    $where_sql_category
-    ORDER BY $sort_by_price
-    LIMIT ?, ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $offset, $products_per_page);
-$stmt->execute();
-$result = $stmt->get_result();
+$products = getProductList($conn, $sort_by_price, $category_id, $page, $product_per_page )['pC'];
 
+$total_products = getProductList($conn, $sort_by_price, $category_id, $page )['total_product'];
 
-$products = []; // Khởi tạo mảng để lưu trữ sản phẩm
+$total_pages = ceil($total_products / 15);
 
-while ($row = $result->fetch_assoc()) {
-  $products[] = $row; // Thêm từng dòng vào mảng
-}
+$categories = getCategoryList($conn)['categories'];
+$sub_categories = getCategoryList($conn)['sub_categories'];
 
-$total_result_sql = "SELECT * FROM products p $where_sql_category";
-$total_result = $conn->query($total_result_sql);
-$total_products = $total_result->num_rows;
-
-$total_pages = ceil($total_products / $products_per_page);
-
-$categories = [];
-$sub_categories = [];
-$category_stmt = $conn->prepare("SELECT * FROM categories");
-$category_stmt->execute();
-$category_result = $category_stmt->get_result();
-
-while ($row = $category_result->fetch_assoc()) {
-  if ($row['parent_category_id'] == NULL) {
-    $categories[] = $row; // Thêm từng dòng vào mảng
-  } else {
-    $sub_categories[] = $row;
-  }
-}
 ?>
 
 
@@ -316,6 +279,8 @@ while ($row = $category_result->fetch_assoc()) {
     loadComponent("footer", "footer.html");
   </script>
   <script>
+    const url = new URL(window.location.href);
+
     function handleSortingChange() {
       const sorting = document.getElementById("sorting").value;
       url.searchParams.delete("page"); // Xóa tham số 'page'
@@ -328,15 +293,20 @@ while ($row = $category_result->fetch_assoc()) {
         window.location.href = url.toString();
       }
     }
-  </script>
-  <script>
-    const url = new URL(window.location.href);
+    
 
     function updateURL(param, value, url) {
-      // Lấy URL hiện tại
+      // Lấy URL hiện tại nếu chưa có URL được truyền vào
       if (url == 'undefined') {
-        const url = new URL(window.location.href);
+        url = new URL(window.location.href);
       }
+
+      // Kiểm tra nếu param không phải là "page"
+      if (param !== 'page') {
+        // Nếu có tham số "page" thì xóa nó
+        url.searchParams.delete('page');
+      }
+
       // Cập nhật hoặc thêm biến GET
       url.searchParams.set(param, value);
 
@@ -344,6 +314,7 @@ while ($row = $category_result->fetch_assoc()) {
       window.location.href = url.toString();
     }
   </script>
+
   <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="vendor/simplebar/dist/simplebar.min.js"></script>
   <script src="vendor/tiny-slider/dist/min/tiny-slider.js"></script>

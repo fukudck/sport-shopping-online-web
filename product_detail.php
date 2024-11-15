@@ -102,7 +102,7 @@
 			<div id="header"></div>
 			<!-- End Header -->
 			<!-- Page Title-->
-			<div class="bg-accent text-white py-4">
+			<div class="bg-dark text-white py-4">
 				<div
 					class="container d-flex flex-column flex-md-row align-items-center">
 					<!-- Breadcrumbs -->
