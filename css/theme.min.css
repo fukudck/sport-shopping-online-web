@@ -4307,13 +4307,14 @@
    border-top: 0;
  }
  .card-body {
+  overflow: hidden;
   flex-grow: 1;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-   padding: var(--cz-card-spacer-y) var(--cz-card-spacer-x);
-   color: var(--cz-card-color);
+  padding: var(--cz-card-spacer-y) var(--cz-card-spacer-x);
+  color: var(--cz-card-color);
  }
  .card-title {
    margin-bottom: var(--cz-card-title-spacer-y);
@@ -17239,6 +17240,8 @@
    }
  }
  .product-title > a {
+  white-space: nowrap;
+  overflow: hidden; 
    transition: color 0.25s ease-in-out;
    color: #373f50;
    text-decoration: none !important;

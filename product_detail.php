@@ -295,29 +295,31 @@
 								data-carousel-options="{&quot;items&quot;: 2, &quot;controls&quot;: true, &quot;nav&quot;: false, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 18},&quot;768&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 20}, &quot;1100&quot;:{&quot;items&quot;:4, &quot;gutter&quot;: 30}}}">
 								<!-- Product-->
 								<?php foreach ($also_like_products as $also_like_product) { ?>
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>">
-											<img src="<?php echo $also_like_product['image_url'] ?>" alt="Product">
+								<!-- Product -->
+								<div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+									<div class="card product-card card_container h-100">
+										<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>" class="card-img-top">
+											<img class="image_product img-fluid" src="<?php echo $also_like_product['image_url'] ?>" alt="Product">
 										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted">
-												<?php echo $also_like_product['category_name'] ?>
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>" class="text-dark text-decoration-none"><?php echo $also_like_product['name'] ?></a>
+										<div class="card-body py-3">
+											<a class="product-meta d-block fs-xs pb-1"><?php echo $also_like_product['category_name'] ?></a>
+											<h3 class="product-title fs-sm ">
+												<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>">
+													<?php echo $also_like_product['name'] ?>
+												</a>
 											</h3>
-											<div class="d-flex justify-content-between align-items-center">
+											<div class="d-flex justify-content-between">
 												<div class="product-price">
-												<div class="product-price"><span
-													class="text-accent"><?php echo (int)$also_like_product['price'] ?><small>.000<sup>đ</sup></small></span></div>
+													<span class="text-accent">
+														<?php echo (int)$also_like_product['price'] ?><small>.000<sup>đ</sup></small>
+													</span>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<?php } ?>
+								<!-- END- Product -->
+							<?php } ?>
 								<!-- Product-->
 								
 							</div>
