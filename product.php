@@ -118,7 +118,7 @@
     
   </head>
   <!-- Body-->
-  <body class="handheld-toolbar-enabled">
+  <body>
     
     <main class="page-wrapper">
 			<div id="header"></div>
@@ -294,29 +294,29 @@
         </div>
       </div>
     </main>
-    <div class="handheld-toolbar">
+    <div>
       <div class="d-table table-layout-fixed w-100">
         <a
-          class="d-table-cell handheld-toolbar-item"
+          class="d-table-cell"
           href="#"
           data-bs-toggle="offcanvas"
           data-bs-target="#shop-sidebar"
-          ><span class="handheld-toolbar-icon"
+          ><span
             ><i class="ci-filter-alt"></i></span
-          ><span class="handheld-toolbar-label">Sắp xếp</span></a
+          ><span>Sắp xếp</span></a
         ><a
-          class="d-table-cell handheld-toolbar-item"
+          class="d-table-cell"
           href="javascript:void(0)"
           data-bs-toggle="collapse"
           data-bs-target="#navbarCollapse"
           onclick="window.scrollTo(0, 0)"
-          ><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span
-          ><span class="handheld-toolbar-label">Menu</span></a
-        ><a class="d-table-cell handheld-toolbar-item" href="shop-cart.html"
-          ><span class="handheld-toolbar-icon"
+          ><span><i class="ci-menu"></i></span
+          ><span>Menu</span></a
+        ><a class="d-table-cell" href="shop-cart.html"
+          ><span
             ><i class="ci-cart"></i
             ><span class="badge bg-primary rounded-pill ms-1">{4}</span></span
-          ><span class="handheld-toolbar-label">Cart</span></a
+          ><span >Cart</span></a
         >
       </div>
     </div>
