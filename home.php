@@ -1,31 +1,7 @@
 <?php 
 	require_once('php/conn.php');
-
-	// 8 SP ngẫu nhiên
-	// Sử dụng Prepared Statements để tránh SQL injection
-    $stmt = $conn->prepare("
-		SELECT p.*, c.category_name, pi.image_url
-		FROM products p
-		JOIN categories c ON p.category_id = c.category_id
-		LEFT JOIN (
-			SELECT product_id, MIN(image_url) AS image_url
-			FROM product_images
-			GROUP BY product_id
-		) pi ON p.product_id = pi.product_id
-		ORDER BY RAND()
-		LIMIT 8;
-
-
-	");
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-	$products = []; // Khởi tạo mảng để lưu trữ sản phẩm
-
-	while ($row = $result->fetch_assoc()) {
-		$products[] = $row; // Thêm từng dòng vào mảng
-	}
-
+	require('php/query_func.php');
+	$products = getRandomProducts($conn);
 ?>
 
 

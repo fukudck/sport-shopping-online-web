@@ -47,4 +47,31 @@ function getCategoryList($conn) {
     return ['categories' => $categories, 'sub_categories' => $sub_categories];
 }
 
+function getRandomProducts($conn, $which_category = "", $number = 8) {
+    if (!empty($which_category)) {
+        $which_category = "WHERE p.category_id = " . $which_category;
+    }
+    $stmt = $conn->prepare(
+        "SELECT p.*, c.category_name , pi.image_url
+        FROM products p 
+        JOIN categories c ON p.category_id = c.category_id 
+        LEFT JOIN (
+            SELECT product_id, MIN(image_url) AS image_url
+            FROM product_images
+            GROUP BY product_id
+        ) pi ON p.product_id = pi.product_id
+        $which_category
+        ORDER BY RAND() 
+        LIMIT $number
+    ");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+		$products[] = $row;
+	}
+    return $products;
+}
+
 ?>

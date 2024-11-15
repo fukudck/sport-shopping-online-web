@@ -1,5 +1,7 @@
 <?php 
 	require_once('php/conn.php');
+	require('php/query_func.php');
+
 	if (!isset($_GET['product_id'])) {
 		header("Location: product.php");
 	}
@@ -29,28 +31,7 @@
 	}
 
 
-  	// 8 SP ngẫu nhiên cùng category
-	$also_like_stmt = $conn->prepare("
-		SELECT p.*, c.category_name , pi.image_url
-		FROM products p 
-		JOIN categories c ON p.category_id = c.category_id 
-		LEFT JOIN (
-			SELECT product_id, MIN(image_url) AS image_url
-			FROM product_images
-			GROUP BY product_id
-		) pi ON p.product_id = pi.product_id
-		WHERE p.category_id = ".$product['category_id']."
-		ORDER BY RAND() 
-		LIMIT 8
-	");
-	$also_like_stmt->execute();
-	$also_like_result = $also_like_stmt->get_result();
-
-	$also_like_products = []; // Khởi tạo mảng để lưu trữ sản phẩm
-
-	while ($row = $also_like_result->fetch_assoc()) {
-		$also_like_products[] = $row; // Thêm từng dòng vào mảng
-	}
+	$also_like_products = getRandomProducts($conn, $product['category_id']);
 
 
 
