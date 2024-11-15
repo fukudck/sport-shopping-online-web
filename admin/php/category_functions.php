@@ -1,6 +1,6 @@
 <?php
 
-// hỗ trợ việc add cato 
+// hỗ trợ việc add category 
 function addCategory($conn, $name, $parentCategory, $imgFile, $path)
 {
   $image_ext = pathinfo($imgFile['name'], PATHINFO_EXTENSION);
@@ -18,31 +18,20 @@ function addCategory($conn, $name, $parentCategory, $imgFile, $path)
 }
 
 
-// đổ ra giao diện 
-function getCategoriesIntoIndex($conn)
+// đổ ra giao diện dashboard category
+function getCategoriesIntoIndex($conn, $parent_id = null)
 {
-  // Lấy danh sách các danh mục cha (parent_category_id = NULL)
-  $sql = "SELECT * FROM categories WHERE parent_category_id IS NULL";
-  $parentCategories = $conn->query($sql);
-
   $categories = [];
 
-  if ($parentCategories->num_rows > 0) {
-    while ($parent = $parentCategories->fetch_assoc()) {
-      // Thêm danh mục cha vào mảng
-      $categories[] = $parent;
+  // Lấy các danh mục theo parent_id
+  $sql = "SELECT * FROM categories WHERE parent_category_id " . ($parent_id === null ? "IS NULL" : "= $parent_id");
+  $result = $conn->query($sql);
 
-      // Truy vấn để lấy các danh mục con của danh mục cha hiện tại
-      $parent_id = $parent['category_id'];
-      $childSql = "SELECT * FROM categories WHERE parent_category_id = $parent_id";
-      $childCategories = $conn->query($childSql);
-
-      // Thêm các danh mục con vào mảng
-      if ($childCategories->num_rows > 0) {
-        while ($child = $childCategories->fetch_assoc()) {
-          $categories[] = $child;
-        }
-      }
+  if ($result->num_rows > 0) {
+    while ($category = $result->fetch_assoc()) {
+      // Đệ quy để lấy các danh mục con
+      $category['subcategories'] = getCategoriesIntoIndex($conn, $category['category_id']);
+      $categories[] = $category;
     }
   }
 

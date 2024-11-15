@@ -121,11 +121,14 @@ $categories = getCategories($conn);
                   <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
                 </div>
                 <ul class="list-unstyled mb-0">
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="dashboard-categories.php"><i class="ci-user opacity-60 me-2"></i>Danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                      href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
                   <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
-                      href="dashboard-add-new-category.php"><i class="ci-user opacity-60 me-2"></i>Thêm danh mục</a>
-                  </li>
+                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-category.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
               </div>
             </div>
           </aside>
@@ -140,7 +143,6 @@ $categories = getCategories($conn);
                 <div class="mb-3 pb-2">
                   <label class="form-label" for="unp-category-name">Category name</label>
                   <input class="form-control" type="text" id="unp-category-name" name="category_name">
-                  <div class="form-text">Maximum 100 characters. No HTML or emoji allowed.</div>
                 </div>
                 <div class="mb-3 pb-2">
                   <div class="py-2">
