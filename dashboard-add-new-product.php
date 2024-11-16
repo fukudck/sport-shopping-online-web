@@ -127,11 +127,11 @@ $categories = getCategories($conn);
                 <ul class="list-unstyled mb-0">
                   <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
                       href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
                       href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="dashboard-add-new-category.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                      href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
                       href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
               </div>
             </div>
@@ -161,33 +161,75 @@ $categories = getCategories($conn);
                   </div>
                 </div>
                 <div class="mb-3 pb-2">
-                  <label class="form-label" for="sizeType">Chọn loại kích thước</label>
+                  <label class="form-label" for="sizeType">Kích thước</label>
                   <select id="sizeType" class="form-control" name="sizeType">
+                    <option selected>Chọn loại kích thước</option>
                     <option value="none">Không có</option>
                     <option value="letter">Theo chữ</option>
                     <option value="number">Theo số</option>
                   </select>
                 </div>
+
+                <!-- Input số lượng khi không có size -->
+                <div id="noSize" class="size-options">
+                  <label class="form-label">Tổng số lượng:</label>
+                  <div class="input-group mb-2" style="max-width: 200px;">
+                    <span class="input-group-text">SL</span>
+                    <input type="number" class="form-control" name="total_quantity" min="0" value="0">
+                  </div>
+                </div>
+
                 <!-- Kích thước theo chữ -->
                 <div id="letterSizes" class="size-options">
                   <label class="form-label">Kích thước theo chữ:</label>
-                  <div>
-                    <label class="me-2"><input type="checkbox" name="size[]" value="XS"> XS</label>
-                    <label class="me-2"><input type="checkbox" name="size[]" value="S"> S</label>
-                    <label class="me-2"><input type="checkbox" name="size[]" value="M"> M</label>
-                    <label class="me-2"><input type="checkbox" name="size[]" value="L"> L</label>
-                    <label class="me-2"><input type="checkbox" name="size[]" value="XL"> XL</label>
+                  <div class="row">
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="input-group">
+                        <span class="input-group-text">XS</span>
+                        <input type="number" class="form-control" name="size[XS]" min="0" value="0">
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="input-group">
+                        <span class="input-group-text">S</span>
+                        <input type="number" class="form-control" name="size[S]" min="0" value="0">
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="input-group">
+                        <span class="input-group-text">M</span>
+                        <input type="number" class="form-control" name="size[M]" min="0" value="0">
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="input-group">
+                        <span class="input-group-text">L</span>
+                        <input type="number" class="form-control" name="size[L]" min="0" value="0">
+                      </div>
+                    </div>
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="input-group">
+                        <span class="input-group-text">XL</span>
+                        <input type="number" class="form-control" name="size[XL]" min="0" value="0">
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <!-- Kích thước theo số -->
                 <div id="numberSizes" class="size-options">
                   <label class="form-label">Kích thước theo số:</label>
-                  <div>
+                  <div class="row">
                     <!-- Tạo các checkbox số từ 39 đến 50 -->
                     <script>
                       for (let i = 39; i <= 50; i++) {
-                        document.write(
-                          `<label class="me-2"><input type="checkbox" name="size[]" value="${i}"> ${i}</label> `);
+                        document.write(`
+                        <div class="col-6 col-md-4 mb-2">
+                          <div class="input-group">
+                            <span class="input-group-text">${i}</span>
+                            <input type="number" class="form-control" name="size[${i}]" min="0" value="0">
+                          </div>
+                        </div>
+                      `);
                       }
                     </script>
                   </div>
@@ -199,7 +241,10 @@ $categories = getCategories($conn);
                   document.getElementById('sizeType').addEventListener('change', function() {
                     const value = this.value;
                     document.querySelectorAll('.size-options').forEach(el => el.style.display = 'none');
-                    if (value === 'letter') {
+
+                    if (value === 'none') {
+                      document.getElementById('noSize').style.display = 'block';
+                    } else if (value === 'letter') {
                       document.getElementById('letterSizes').style.display = 'block';
                     } else if (value === 'number') {
                       document.getElementById('numberSizes').style.display = 'block';
@@ -253,12 +298,6 @@ $categories = getCategories($conn);
                     <label class="form-label" for="price">Giá</label>
                     <div class="input-group">
                       <input class="form-control" type="text" name="price" id="price">
-                    </div>
-                  </div>
-                  <div class="col-sm-6 mb-3">
-                    <label class="form-label" for="stock">Tồn kho</label>
-                    <div class="input-group">
-                      <input class="form-control" type="text" name="stock" id="stock">
                     </div>
                   </div>
                 </div>

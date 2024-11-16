@@ -6,17 +6,37 @@ if (isset($_POST['addProduct'])) {
   $product_name = $_POST['product-name'];
   $category = $_POST['category'];
   // implode(',', $_POST['size']): chuyển phần tử trong arr thành chuỗi cách nhua dấu ,
-  $sizes = isset($_POST['size']) ? json_encode($_POST['size']) : '[]'; // Chuyển mảng thành JSON  
   $description = $_POST['description'];
   $price = $_POST['price'];
-  $stock = $_POST['stock'];
+  // Lấy giá trị loại size
+  $sizeType = $_POST['sizeType'];
 
-  $sql = "INSERT INTO products (name, description, price, stock_quantity, category_id,  sizes) 
-            VALUES ('$product_name', '$description', '$price', '$stock' ,'$category', '$sizes')";
+  $sql = "INSERT INTO products (name, description, price, category_id) 
+            VALUES ('$product_name', '$description', '$price' ,'$category')";
 
   // bước xử lý tạo đường dẫn lưu vào DB và folder trên máy
   if ($conn->query($sql) === TRUE) {
     $product_id = $conn->insert_id; // lấy ra id khi được tạo tự động
+
+    if ($sizeType === 'none') {
+      // Nếu không có kích thước, chỉ lưu tổng số lượng
+      $total_quantity = (int)$_POST['total_quantity'];
+      $stmt = $conn->prepare("INSERT INTO product_quantity (product_id, size, quantity) VALUES (?, NULL, ?)");
+      $stmt->bind_param("ii", $product_id, $total_quantity);
+      $stmt->execute();
+      $stmt->close();
+    } else {
+      // Nếu có kích thước, lưu từng size và số lượng
+      foreach ($_POST['size'] as $size => $quantity) {
+        $quantity = (int)$quantity; // Chuyển đổi thành số nguyên
+        if ($quantity > 0) { // Chỉ lưu những size có số lượng > 0
+          $stmt = $conn->prepare("INSERT INTO product_quantity (product_id, size, quantity) VALUES (?, ?, ?)");
+          $stmt->bind_param("isi", $product_id, $size, $quantity);
+          $stmt->execute();
+        }
+      }
+      $stmt->close();
+    }
 
     $categoryHierarchy = getCategoryHierarchy($category, $conn); // Lấy phân cấp danh mục
     $categoryPath = implode('/', $categoryHierarchy); // Chuyển mảng thành chuỗi phân cấp với dấu "/"
