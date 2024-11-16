@@ -60,7 +60,6 @@
 	<!-- Body-->
 	<body>
 		<main class="page-wrapper">
-			<!-- Navbar 3 Level (Light)-->
 			<div id="header"></div>
 			<section class="tns-carousel tns-controls-lg">
 				<div class="tns-carousel-inner"

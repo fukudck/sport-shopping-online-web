@@ -294,32 +294,6 @@
         </div>
       </div>
     </main>
-    <div>
-      <div class="d-table table-layout-fixed w-100">
-        <a
-          class="d-table-cell"
-          href="#"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#shop-sidebar"
-          ><span
-            ><i class="ci-filter-alt"></i></span
-          ><span>Sắp xếp</span></a
-        ><a
-          class="d-table-cell"
-          href="javascript:void(0)"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarCollapse"
-          onclick="window.scrollTo(0, 0)"
-          ><span><i class="ci-menu"></i></span
-          ><span>Menu</span></a
-        ><a class="d-table-cell" href="shop-cart.html"
-          ><span
-            ><i class="ci-cart"></i
-            ><span class="badge bg-primary rounded-pill ms-1">{4}</span></span
-          ><span >Cart</span></a
-        >
-      </div>
-    </div>
     <div id="footer"></div>
     <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll
       ><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span
