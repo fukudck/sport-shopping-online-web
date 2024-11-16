@@ -116,7 +116,7 @@
 
 
 									</div>
-									<form class="mb-grid-gutter" action method="post">
+									<form id="add-to-cart-form" class="mb-grid-gutter" action="cart.php" method="post">
 										<div class="mb-3">
 											<div class="d-flex justify-content-between align-items-center pb-1">
 												<label class="form-label" for="product-size">Bảng hướng dẫn kích
