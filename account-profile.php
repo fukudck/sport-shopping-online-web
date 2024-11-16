@@ -90,7 +90,7 @@ $conn->close();
                 <div class="d-md-flex align-items-center">
                   <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><span class="badge bg-warning position-absolute end-0 mt-n2" data-bs-toggle="tooltip" title="Reward points">384</span><img class="rounded-circle" src="<?php echo htmlspecialchars($user['avatar_img_link'])?>"></div>
                   <div class="ps-md-3">
-                    <h3 class="fs-base mb-0"><?php echo htmlspecialchars($user['first_name']) ." ". htmlspecialchars($user['last_name'])?></h3><span class="text-accent fs-sm"><?php echo htmlspecialchars($user['email'])?></span>
+                    <h3 class="fs-base mb-0"><?php echo htmlspecialchars($user['first_name']) ." ". htmlspecialchars($user['last_name'])?></h3><span class="text-accent fs-sm"><?php echo htmlspecialchars($user['email'])?></span><br><span class="text-dark fs-sm">Ngày đăng ký: <?php echo htmlspecialchars($user['created_at'])?></span>
                   </div>
                 </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Menu</a>
               </div>
@@ -114,7 +114,7 @@ $conn->close();
               <h6 class="fs-base text-light mb-0">Cập nhật thông tin cá nhân bên dưới:</h6><a class="btn btn-primary btn-sm" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
             <!-- Profile form-->
-            <form>
+            <form class="needs-validation" novalidate>
               <div class="bg-secondary rounded-3 p-4 mb-4">
                 <div class="d-flex align-items-center"><img class="rounded" src="<?php echo htmlspecialchars($user['avatar_img_link'])?>" width="90">
                   <div class="ps-3">
@@ -126,11 +126,13 @@ $conn->close();
               <div class="row gx-4 gy-3">
                 <div class="col-sm-6">
                   <label class="form-label" for="account-fn">Họ và tên đệm</label>
-                  <input class="form-control" type="text" id="account-fn" value="<?php echo htmlspecialchars($user['first_name'])?>">
+                  <input required class="form-control" type="text" id="account-fn" value="<?php echo htmlspecialchars($user['first_name'])?>">
+                  <div class="invalid-feedback">Vui lòng nhập họ và tên đệm!</div>
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-ln">Tên</label>
-                  <input class="form-control" type="text" id="account-ln" value="<?php echo htmlspecialchars($user['last_name'])?>">
+                  <input required class="form-control" type="text" id="account-ln" value="<?php echo htmlspecialchars($user['last_name'])?>">
+                  <div class="invalid-feedback">Vui lòng nhập tên!</div>
                 </div>
                 <div class="col-sm-6">
                   <label class="form-label" for="account-email">Địa chỉ Email</label>
@@ -161,7 +163,7 @@ $conn->close();
                 <div class="col-12">
                   <hr class="mt-2 mb-3">
                     <div class="text-end">
-                      <button class="btn btn-primary mt-3 mt-sm-0" type="button">Cập nhật</button>
+                      <button class="btn btn-primary mt-3 mt-sm-0" type="submit">Cập nhật</button>
                     </div>
                 </div>
               </div>
