@@ -127,7 +127,7 @@
 											<select class="form-select" id="product-size" 
 												<?php 
 													// Kiểm tra nếu có "No Size", nếu có thì ẩn dropdown
-													if (in_array("No Size", array_column($product_details['sizes'], 'size'))) {
+													if ($product_details['stock_quantity'] == 0 || in_array("No Size", array_column($product_details['sizes'], 'size'))) {
 														echo 'hidden'; // Ẩn dropdown nếu có "No Size"
 													} else {
 														echo 'required'; // Nếu không có "No Size", đánh dấu dropdown là required
