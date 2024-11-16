@@ -1,7 +1,7 @@
 <?php
   require_once("php/already_signin.php");
   if (isLoggedIn()) {
-    header("Location: test.php");
+    header("Location: home.php");
     exit();
   }
 ?>

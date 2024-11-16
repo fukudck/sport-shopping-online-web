@@ -1,58 +1,14 @@
 <?php 
 	require_once('php/conn.php');
+	require('php/query_func.php');
+
 	if (!isset($_GET['product_id'])) {
 		header("Location: product.php");
 	}
 
-	$sql = "SELECT * FROM products WHERE product_id = ?";
-	$stmt = $conn->prepare($sql);
-	$stmt->bind_param("i", $_GET['product_id']);
-	$stmt->execute();
-	$result = $stmt->get_result();
-	if ($result->num_rows > 0) { 
-	$product = $result->fetch_assoc();
-	$sizes = json_decode($product['sizes']);
-	}
-	else {
-		header("Location: product.php");
-	}
-	$image_sql = "SELECT image_url, image_id FROM product_images WHERE product_id = ?";
-	$image_sql_stmt = $conn->prepare($image_sql);
-	$image_sql_stmt->bind_param("i", $_GET['product_id']);
-	$image_sql_stmt->execute();
-	$image_sql_result = $image_sql_stmt->get_result();
-	$image_urls = array();
+	$product_details  = getProductDetails($conn, $_GET['product_id']);
 
-	// Lấy tất cả các hình ảnh vào mảng
-	while ($row = $image_sql_result->fetch_assoc()) {
-		$image_urls[] = $row;
-	}
-
-
-  	// 8 SP ngẫu nhiên cùng category
-	$also_like_stmt = $conn->prepare("
-		SELECT p.*, c.category_name , pi.image_url
-		FROM products p 
-		JOIN categories c ON p.category_id = c.category_id 
-		LEFT JOIN (
-			SELECT product_id, MIN(image_url) AS image_url
-			FROM product_images
-			GROUP BY product_id
-		) pi ON p.product_id = pi.product_id
-		WHERE p.category_id = ".$product['category_id']."
-		ORDER BY RAND() 
-		LIMIT 8
-	");
-	$also_like_stmt->execute();
-	$also_like_result = $also_like_stmt->get_result();
-
-	$also_like_products = []; // Khởi tạo mảng để lưu trữ sản phẩm
-
-	while ($row = $also_like_result->fetch_assoc()) {
-		$also_like_products[] = $row; // Thêm từng dòng vào mảng
-	}
-
-
+	$also_like_products = getRandomProducts($conn, $product_details['category_id']);
 
 ?>
 
@@ -61,7 +17,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title><?php echo $product['name'] ?></title>
+		<title><?php echo $product_details['name'] ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<!-- Favicon and Touch Icons-->
 		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -102,7 +58,7 @@
 			<div id="header"></div>
 			<!-- End Header -->
 			<!-- Page Title-->
-			<div class="bg-accent text-white py-4">
+			<div class="bg-dark text-white py-4">
 				<div
 					class="container d-flex flex-column flex-md-row align-items-center">
 					<!-- Breadcrumbs -->
@@ -112,7 +68,7 @@
 										class="ci-home"></i> Trang chủ</a></li>
 							<li class="breadcrumb-item"><a href="#" class="text-light">Sản
 									phẩm</a></li>
-							<li class="breadcrumb-item active text-light" aria-current="page"><?php echo $product['name'] ?></li>
+							<li class="breadcrumb-item active text-light" aria-current="page"><?php echo $product_details['name'] ?></li>
 						</ol>
 					</nav>
 				</div>
@@ -128,7 +84,7 @@
 									<div class="product-gallery-preview order-sm-2">
 										<?php 
 										$flag = false;
-										foreach ($image_urls as $image) { ?>
+										foreach ($product_details['image_urls'] as $image) { ?>
 											<div class="product-gallery-preview-item <?php if (!$flag) { echo 'active'; $flag = true;} ?>" id="product_image_<?php echo $image['image_id'] ?>"><img class="image-zoom" src="<?php echo $image['image_url'] ?>" alt="Product image">
 											</div>
 										
@@ -137,9 +93,9 @@
 									<div class="product-gallery-thumblist order-sm-1">
 										<?php 
 										$flag = false;
-										foreach ($image_urls as $image2) { ?>
-										<a class="product-gallery-thumblist-item <?php if (!$flag) { echo 'active'; $flag = true;} ?>" href="#product_image_<?php echo $image2['image_id'] ?>">
-											<img src="<?php echo $image2['image_url'] ?>" ></a>
+										foreach ($product_details['image_urls'] as $image) { ?>
+										<a class="product-gallery-thumblist-item <?php if (!$flag) { echo 'active'; $flag = true;} ?>" href="#product_image_<?php echo $image['image_id'] ?>">
+											<img src="<?php echo $image['image_url'] ?>" ></a>
 										<?php } ?>
 									</div>
 								</div>
@@ -150,13 +106,13 @@
 								<div class="product-details ms-auto pb-3">
 									<div
 										class="product-info d-flex justify-content-between align-items-center mb-3">
-										<h1 class="product-title h4 mb-0 text-center text-md-start"><?php echo $product['name'] ?></h1>
+										<h1 class="product-title h4 mb-0 text-center text-md-start"><?php echo $product_details['name'] ?></h1>
 											
 									</div>
 									<div class="price-display mb-3">
 										
-										<span class="product-detail-price h3 fw-bold text-accent me-1"><?php echo (int)$product['price'] ?>.000<sup>đ</sup></span>
-										<div class="badge <?php echo ($product['stock_quantity']>0) ? 'bg-success' : 'bg-danger'; ?> badge-shadow d-md-inline-block text-center" style=" height: 25px; line-height: 25px"><i class="<?php echo ($product['stock_quantity']>0) ? 'ci-security-check' : 'ci-security-close'; ?>"></i> <?php echo ($product['stock_quantity']>0) ? 'Còn hàng' : 'Hết hàng'; ?></div>
+										<span class="product-detail-price h3 fw-bold text-accent me-1"><?php echo (int)$product_details['price'] ?>.000<sup>đ</sup></span>
+										<div class="badge <?php echo ($product_details['stock_quantity']>0) ? 'bg-success' : 'bg-danger'; ?> badge-shadow d-md-inline-block text-center" style=" height: 25px; line-height: 25px"><i class="<?php echo ($product_details['stock_quantity']>0) ? 'ci-security-check' : 'ci-security-close'; ?>"></i> <?php echo ($product_details['stock_quantity']>0) ? 'Còn hàng' : 'Hết hàng'; ?></div>
 
 
 									</div>
@@ -168,11 +124,18 @@
 													data-bs-toggle="modal"><i
 														class="ci-ruler lead align-middle me-1 mt-n1"></i>Xem</a>											
 											</div>
-											<select class="form-select" id="product-size" <?php if (empty($sizes)) { echo 'hidden';} else {echo 'required';}?>>
-												<option value>Chọn size</option>
-												<?php foreach ($sizes as $size) { ?>
-													<option value="<?php echo htmlspecialchars($size)?>"><?php echo htmlspecialchars($size)?></option>
-													
+											<select class="form-select" id="product-size" 
+												<?php 
+													// Kiểm tra nếu có "No Size", nếu có thì ẩn dropdown
+													if ($product_details['stock_quantity'] == 0 || in_array("No Size", array_column($product_details['sizes'], 'size'))) {
+														echo 'hidden'; // Ẩn dropdown nếu có "No Size"
+													} else {
+														echo 'required'; // Nếu không có "No Size", đánh dấu dropdown là required
+													}
+												?>>
+												<option value="" disabled selected>Chọn size</option>
+												<?php foreach ($product_details['sizes'] as $size) { ?>
+													<option value="<?php echo htmlspecialchars($size['size']) ?>"><?php echo htmlspecialchars($size['size']) ?></option>
 												<?php } ?>
 											</select>
 										</div>
@@ -203,7 +166,7 @@
 												}
 											</script>
 											<button class="btn btn-accent btn-shadow d-block w-100"
-												type="submit" <?php echo ($product['stock_quantity']>0) ? '' : 'disabled'; ?>><i class="ci-cart fs-lg me-2" ></i>Thêm vào giỏ
+												type="submit" <?php echo ($product_details['stock_quantity']>0) ? '' : 'disabled'; ?>><i class="ci-cart fs-lg me-2" ></i>Thêm vào giỏ
 												hàng</button>
 										</div>
 									</form>
@@ -223,7 +186,7 @@
 												data-bs-parent="#productPanels">
 												<div class="accordion-body">
 													<ul class="fs-sm ps-4">
-														<li><?php echo $product['description'] ?></li>
+														<li><?php echo $product_details['description'] ?></li>
 													</ul>
 												</div>
 											</div>
@@ -258,26 +221,6 @@
 												</div>
 											</div>
 										</div>
-										<!--  Tạm thời không dùng <div class="accordion-item">
-											<h3 class="accordion-header">
-												<a class="accordion-button collapsed" href="#localStore"
-													role="button" data-bs-toggle="collapse" aria-expanded="true"
-													aria-controls="localStore">
-													<i class="ci-location text-muted fs-lg align-middle me-2"></i>Cửa
-													hàng gần đây
-												</a>
-											</h3>
-											<div class="accordion-collapse collapse" id="localStore"
-												data-bs-parent="#productPanels">
-												<div class="accordion-body">
-													<select class="form-select">
-														<option>TP Hồ Chí Minh</option>
-														<option>Đà Nẵng</option>
-														<option>Hà Nội</option>
-													</select>
-												</div>
-											</div>
-										</div> -->
 									</div>
 								</div>
 							</div>
@@ -295,29 +238,31 @@
 								data-carousel-options="{&quot;items&quot;: 2, &quot;controls&quot;: true, &quot;nav&quot;: false, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 18},&quot;768&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 20}, &quot;1100&quot;:{&quot;items&quot;:4, &quot;gutter&quot;: 30}}}">
 								<!-- Product-->
 								<?php foreach ($also_like_products as $also_like_product) { ?>
-								<div>
-									<div class="card product-card card-static border">
-										<a class="card-img-top d-block overflow-hidden" href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>">
-											<img src="<?php echo $also_like_product['image_url'] ?>" alt="Product">
+								<!-- Product -->
+								<div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+									<div class="card product-card card_container h-100">
+										<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>" class="card-img-top">
+											<img class="image_product img-fluid" src="<?php echo $also_like_product['image_url'] ?>" alt="Product">
 										</a>
-										<div class="card-body py-2">
-											<a
-												class="product-meta d-block fs-xs pb-1 text-decoration-none text-muted">
-												<?php echo $also_like_product['category_name'] ?>
-											</a>
-											<h3 class="product-title fs-sm mb-2">
-												<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>" class="text-dark text-decoration-none"><?php echo $also_like_product['name'] ?></a>
+										<div class="card-body py-3">
+											<a class="product-meta d-block fs-xs pb-1"><?php echo $also_like_product['category_name'] ?></a>
+											<h3 class="product-title fs-sm ">
+												<a href="product_detail.php?&product_id=<?php echo $also_like_product['product_id'] ?>">
+													<?php echo $also_like_product['name'] ?>
+												</a>
 											</h3>
-											<div class="d-flex justify-content-between align-items-center">
+											<div class="d-flex justify-content-between">
 												<div class="product-price">
-												<div class="product-price"><span
-													class="text-accent"><?php echo (int)$also_like_product['price'] ?><small>.000<sup>đ</sup></small></span></div>
+													<span class="text-accent">
+														<?php echo (int)$also_like_product['price'] ?><small>.000<sup>đ</sup></small>
+													</span>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<?php } ?>
+								<!-- END- Product -->
+							<?php } ?>
 								<!-- Product-->
 								
 							</div>
