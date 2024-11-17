@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1:3308
--- Thời gian đã tạo: Th10 16, 2024 lúc 03:12 AM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.0.30
+-- Host: 127.0.0.1
+-- Generation Time: Nov 11, 2024 at 09:13 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `e-com`
+-- Database: `e_com`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `carts`
+-- Table structure for table `carts`
 --
 
 CREATE TABLE `carts` (
@@ -33,7 +33,7 @@ CREATE TABLE `carts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `carts`
+-- Dumping data for table `carts`
 --
 
 INSERT INTO `carts` (`cart_id`, `user_id`) VALUES
@@ -45,7 +45,7 @@ INSERT INTO `carts` (`cart_id`, `user_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `cart_items`
+-- Table structure for table `cart_items`
 --
 
 CREATE TABLE `cart_items` (
@@ -58,50 +58,48 @@ CREATE TABLE `cart_items` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `category_name` varchar(100) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `parent_category_id` int(11) DEFAULT NULL,
-  `category_image_url` varchar(255) NOT NULL
+  `parent_category_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `categories`
+-- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`category_id`, `category_name`, `created_at`, `parent_category_id`, `category_image_url`) VALUES
-(1, 'Quần', '2024-11-04 13:20:14', NULL, ''),
-(2, 'Áo', '2024-11-04 13:20:14', NULL, ''),
-(3, 'Phụ Kiện', '2024-11-04 13:20:14', NULL, ''),
-(4, 'Giày', '2024-11-04 13:20:14', NULL, ''),
-(1000, 'Quần Dài', '2024-11-04 13:20:14', 1, ''),
-(1001, 'Quần Short', '2024-11-04 13:20:14', 1, ''),
-(1002, 'Quần Jeans', '2024-11-04 13:20:14', 1, ''),
-(1003, 'Quần Thể Thao', '2024-11-04 13:20:14', 1, ''),
-(1004, 'Quần Bơi', '2024-11-04 13:20:14', 1, ''),
-(2000, 'Áo Sơ Mi', '2024-11-04 13:20:14', 2, ''),
-(2001, 'Áo Polo', '2024-11-04 13:20:14', 2, ''),
-(2002, 'Áo Dài Tay', '2024-11-04 13:20:14', 2, ''),
-(2003, 'Áo Thun', '2024-11-04 13:20:14', 2, ''),
-(2004, 'Áo Khoác', '2024-11-04 13:20:14', 2, ''),
-(3000, 'Balo', '2024-11-04 13:20:14', 3, ''),
-(3001, 'Tất', '2024-11-04 13:20:14', 3, ''),
-(3002, 'Nón', '2024-11-04 13:20:14', 3, ''),
-(4000, 'Giày Chạy Bộ', '2024-11-04 13:20:14', 4, ''),
-(4001, 'Giày Tennis', '2024-11-04 13:20:14', 4, ''),
-(4002, 'Giày Golf', '2024-11-04 13:20:14', 4, ''),
-(4003, 'Dép', '2024-11-04 13:20:14', 4, ''),
-(4004, 'Giày Bóng Đá', '2024-11-04 13:20:14', 4, ''),
-(4008, 'Quần Dài Nam', '2024-11-15 11:13:24', 1000, '1731644004.');
+INSERT INTO `categories` (`category_id`, `category_name`, `created_at`, `parent_category_id`) VALUES
+(1, 'Quần', '2024-11-04 13:20:14', NULL),
+(2, 'Áo', '2024-11-04 13:20:14', NULL),
+(3, 'Phụ Kiện', '2024-11-04 13:20:14', NULL),
+(4, 'Giày', '2024-11-04 13:20:14', NULL),
+(1000, 'Quần Dài', '2024-11-04 13:20:14', 1),
+(1001, 'Quần Short', '2024-11-04 13:20:14', 1),
+(1002, 'Quần Jeans', '2024-11-04 13:20:14', 1),
+(1003, 'Quần Thể Thao', '2024-11-04 13:20:14', 1),
+(1004, 'Quần Bơi', '2024-11-04 13:20:14', 1),
+(2000, 'Áo Sơ Mi', '2024-11-04 13:20:14', 2),
+(2001, 'Áo Polo', '2024-11-04 13:20:14', 2),
+(2002, 'Áo Dài Tay', '2024-11-04 13:20:14', 2),
+(2003, 'Áo Thun', '2024-11-04 13:20:14', 2),
+(2004, 'Áo Khoác', '2024-11-04 13:20:14', 2),
+(3000, 'Balo', '2024-11-04 13:20:14', 3),
+(3001, 'Tất', '2024-11-04 13:20:14', 3),
+(3002, 'Nón', '2024-11-04 13:20:14', 3),
+(4000, 'Giày Chạy Bộ', '2024-11-04 13:20:14', 4),
+(4001, 'Giày Tennis', '2024-11-04 13:20:14', 4),
+(4002, 'Giày Golf', '2024-11-04 13:20:14', 4),
+(4003, 'Dép', '2024-11-04 13:20:14', 4),
+(4004, 'Giày Bóng Đá', '2024-11-04 13:20:14', 4);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `orders`
+-- Table structure for table `orders`
 --
 
 CREATE TABLE `orders` (
@@ -116,7 +114,7 @@ CREATE TABLE `orders` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `order_items`
+-- Table structure for table `order_items`
 --
 
 CREATE TABLE `order_items` (
@@ -130,7 +128,7 @@ CREATE TABLE `order_items` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `products`
+-- Table structure for table `products`
 --
 
 CREATE TABLE `products` (
@@ -141,11 +139,11 @@ CREATE TABLE `products` (
   `stock_quantity` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `sizes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+  `sizes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`sizes`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `products`
+-- Dumping data for table `products`
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock_quantity`, `category_id`, `created_at`, `sizes`) VALUES
@@ -216,13 +214,13 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock_qua
 (25005, 'Áo Khoác Nam gilet phao Puffer', 'Áo Khoác Nam gilet phao Puffer\nThiết kế trẻ trung, phong cách.\nChất liệu giữ ấm tốt, thích hợp cho mùa đông.', 900.00, 40, 2004, '2024-11-04 13:39:23', '[\"XS\", \"S\", \"M\", \"L\", \"XL\"]'),
 (25006, 'Áo Khoác Nam có mũ Daily Wear', 'Áo Khoác Nam có mũ Daily Wear\nThiết kế đơn giản, dễ dàng phối đồ.\nChất liệu thoáng khí, phù hợp cho mùa thu.', 650.00, 35, 2004, '2024-11-04 13:39:23', '[\"XS\", \"S\", \"M\", \"L\", \"XL\"]'),
 (25007, 'Áo khoác chạy bộ có mũ fast and Free', 'Áo khoác chạy bộ có mũ fast and Free\nChất liệu thoáng khí, thích hợp cho chạy bộ.\nThiết kế trẻ trung, năng động.', 700.00, 30, 2004, '2024-11-04 13:39:23', '[\"XS\", \"S\", \"M\", \"L\", \"XL\"]'),
-(31001, 'Túi tote 84RISING Donald 90th', 'Túi tote 84RISING Donald 90th\nChất liệu bền bỉ, thiết kế thời trang.\nPhù hợp cho đi học và đi chơi.', 350.00, 100, 3000, '2024-11-04 13:42:16', ''),
-(31002, 'Túi UT Duffle size lớn 38L', 'Túi UT Duffle size lớn 38L\nThiết kế tiện lợi cho việc đi du lịch.\nChất liệu chống nước, bền bỉ.', 650.00, 80, 3000, '2024-11-04 13:42:16', ''),
-(31003, 'Túi UT Duffle size vừa 18L', 'Túi UT Duffle size vừa 18L\nDễ dàng mang theo mọi lúc mọi nơi.\nChất liệu nhẹ và thoáng khí.', 500.00, 90, 3000, '2024-11-04 13:42:16', ''),
-(31004, 'Túi Tote Canvas in logo Coolmate', 'Túi Tote Canvas in logo Coolmate\nThiết kế đơn giản nhưng hiện đại.\nChất liệu canvas bền, dễ giặt.', 400.00, 75, 3000, '2024-11-04 13:42:16', ''),
-(31005, 'Túi Tote 84RISING Typo', 'Túi Tote 84RISING Typo\nChất liệu chắc chắn, kiểu dáng trẻ trung.\nPhù hợp cho các buổi dã ngoại hoặc đi học.', 450.00, 70, 3000, '2024-11-04 13:42:16', ''),
-(31006, 'Túi trống Tập Gym', 'Túi trống Tập Gym\nThiết kế tiện lợi cho các buổi tập gym.\nChất liệu chống nước, dễ dàng vệ sinh.', 600.00, 60, 3000, '2024-11-04 13:42:16', ''),
-(31007, 'Túi Coolmate Clean Bag', 'Túi Coolmate Clean Bag\nDễ dàng mang theo mọi nơi, giữ cho đồ dùng sạch sẽ.\nThiết kế gọn nhẹ, tiện dụng.', 300.00, 65, 3000, '2024-11-04 13:42:16', ''),
+(31001, 'Túi tote 84RISING Donald 90th', 'Túi tote 84RISING Donald 90th\nChất liệu bền bỉ, thiết kế thời trang.\nPhù hợp cho đi học và đi chơi.', 350.00, 100, 3000, '2024-11-04 13:42:16', NULL),
+(31002, 'Túi UT Duffle size lớn 38L', 'Túi UT Duffle size lớn 38L\nThiết kế tiện lợi cho việc đi du lịch.\nChất liệu chống nước, bền bỉ.', 650.00, 80, 3000, '2024-11-04 13:42:16', NULL),
+(31003, 'Túi UT Duffle size vừa 18L', 'Túi UT Duffle size vừa 18L\nDễ dàng mang theo mọi lúc mọi nơi.\nChất liệu nhẹ và thoáng khí.', 500.00, 90, 3000, '2024-11-04 13:42:16', NULL),
+(31004, 'Túi Tote Canvas in logo Coolmate', 'Túi Tote Canvas in logo Coolmate\nThiết kế đơn giản nhưng hiện đại.\nChất liệu canvas bền, dễ giặt.', 400.00, 75, 3000, '2024-11-04 13:42:16', NULL),
+(31005, 'Túi Tote 84RISING Typo', 'Túi Tote 84RISING Typo\nChất liệu chắc chắn, kiểu dáng trẻ trung.\nPhù hợp cho các buổi dã ngoại hoặc đi học.', 450.00, 70, 3000, '2024-11-04 13:42:16', NULL),
+(31006, 'Túi trống Tập Gym', 'Túi trống Tập Gym\nThiết kế tiện lợi cho các buổi tập gym.\nChất liệu chống nước, dễ dàng vệ sinh.', 600.00, 60, 3000, '2024-11-04 13:42:16', NULL),
+(31007, 'Túi Coolmate Clean Bag', 'Túi Coolmate Clean Bag\nDễ dàng mang theo mọi nơi, giữ cho đồ dùng sạch sẽ.\nThiết kế gọn nhẹ, tiện dụng.', 300.00, 65, 3000, '2024-11-04 13:42:16', NULL),
 (32001, 'Combo 4 Đôi Tất Nam chạy bộ', 'Combo 4 Đôi Tất Nam chạy bộ\nChất liệu thoáng khí, thiết kế thoải mái.\nPhù hợp cho các hoạt động thể thao.', 200.00, 150, 3001, '2024-11-04 13:42:16', '[39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]'),
 (32002, 'Pack 3 Tất Active cổ ngắn', 'Pack 3 Tất Active cổ ngắn\nThiết kế năng động, giúp thoáng chân.\nChất liệu co giãn, dễ giặt.', 180.00, 140, 3001, '2024-11-04 13:42:16', '[39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]'),
 (32003, 'Tất Nam Thể Thao Cổ Dài', 'Tất Nam Thể Thao Cổ Dài\nGiúp giữ ấm chân trong mùa đông.\nChất liệu mềm mại, thoải mái khi mang.', 250.00, 130, 3001, '2024-11-04 13:42:16', '[39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]'),
@@ -270,7 +268,7 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock_qua
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `product_images`
+-- Table structure for table `product_images`
 --
 
 CREATE TABLE `product_images` (
@@ -280,7 +278,7 @@ CREATE TABLE `product_images` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `product_images`
+-- Dumping data for table `product_images`
 --
 
 INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`) VALUES
@@ -1026,7 +1024,7 @@ INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`) VALUES
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -1042,7 +1040,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_name`, `created_at`, `user_type`, `phone_number`, `avatar_img_link`) VALUES
@@ -1053,11 +1051,11 @@ INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_na
 (5, 'b@b', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'b', 'b', '2024-11-02 20:48:31', 'Customer', '112', 'img/shop/account/default.png');
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `carts`
+-- Indexes for table `carts`
 --
 ALTER TABLE `carts`
   ADD PRIMARY KEY (`cart_id`),
@@ -1065,7 +1063,7 @@ ALTER TABLE `carts`
   ADD KEY `idx_cart_user_id` (`user_id`);
 
 --
--- Chỉ mục cho bảng `cart_items`
+-- Indexes for table `cart_items`
 --
 ALTER TABLE `cart_items`
   ADD PRIMARY KEY (`cart_item_id`),
@@ -1073,7 +1071,7 @@ ALTER TABLE `cart_items`
   ADD KEY `idx_product_cart` (`product_id`);
 
 --
--- Chỉ mục cho bảng `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`),
@@ -1081,14 +1079,14 @@ ALTER TABLE `categories`
   ADD KEY `parent_category_id` (`parent_category_id`);
 
 --
--- Chỉ mục cho bảng `orders`
+-- Indexes for table `orders`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`),
   ADD KEY `idx_user_id` (`user_id`);
 
 --
--- Chỉ mục cho bảng `order_items`
+-- Indexes for table `order_items`
 --
 ALTER TABLE `order_items`
   ADD PRIMARY KEY (`order_item_id`),
@@ -1096,7 +1094,7 @@ ALTER TABLE `order_items`
   ADD KEY `idx_product_id` (`product_id`);
 
 --
--- Chỉ mục cho bảng `products`
+-- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`product_id`),
@@ -1104,115 +1102,115 @@ ALTER TABLE `products`
 ALTER TABLE `products` ADD FULLTEXT KEY `idx_product_name_desc` (`name`,`description`);
 
 --
--- Chỉ mục cho bảng `product_images`
+-- Indexes for table `product_images`
 --
 ALTER TABLE `product_images`
   ADD PRIMARY KEY (`image_id`),
   ADD KEY `product_id` (`product_id`);
 
 --
--- Chỉ mục cho bảng `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `carts`
+-- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
   MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT cho bảng `cart_items`
+-- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
   MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT cho bảng `categories`
+-- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4016;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4005;
 
 --
--- AUTO_INCREMENT cho bảng `orders`
+-- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
   MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT cho bảng `order_items`
+-- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
   MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT cho bảng `products`
+-- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45021;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45007;
 
 --
--- AUTO_INCREMENT cho bảng `product_images`
+-- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1254;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1244;
 
 --
--- AUTO_INCREMENT cho bảng `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- Các ràng buộc cho các bảng đã đổ
+-- Constraints for dumped tables
 --
 
 --
--- Các ràng buộc cho bảng `carts`
+-- Constraints for table `carts`
 --
 ALTER TABLE `carts`
   ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
--- Các ràng buộc cho bảng `cart_items`
+-- Constraints for table `cart_items`
 --
 ALTER TABLE `cart_items`
   ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`cart_id`),
   ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
 
 --
--- Các ràng buộc cho bảng `categories`
+-- Constraints for table `categories`
 --
 ALTER TABLE `categories`
   ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL;
 
 --
--- Các ràng buộc cho bảng `orders`
+-- Constraints for table `orders`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
--- Các ràng buộc cho bảng `order_items`
+-- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
   ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
 
 --
--- Các ràng buộc cho bảng `products`
+-- Constraints for table `products`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
 
 --
--- Các ràng buộc cho bảng `product_images`
+-- Constraints for table `product_images`
 --
 ALTER TABLE `product_images`
   ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
