@@ -148,5 +148,126 @@ function getProductDetails($conn, $product_id) {
         return null;
     }
 }
+function updateUser($conn, $user_id, $first_name, $last_name, $phone_number, $new_password = null) {
+    // Chuẩn bị câu lệnh SQL
+    $sql = "UPDATE users SET first_name = ?, last_name = ?, phone_number = ?";
+    $params = [$first_name, $last_name, $phone_number];
 
+    // Nếu có mật khẩu mới
+    if ($new_password) {
+        $sql .= ", password_hash = ?";
+        $params[] = hash('sha256', $new_password);
+    }
+
+    $sql .= " WHERE user_id = ?";
+    $params[] = $user_id;
+
+    // Chuẩn bị câu lệnh và thực thi
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(str_repeat('s', count($params) - 1) . 'i', ...$params);
+
+    if ($stmt->execute()) {
+        header("Location: ".$_SERVER['PHP_SELF']."?success=1");
+    } else {
+        header("Location: ".$_SERVER['PHP_SELF']."?error=1");
+    }
+}
+
+function getUserData($conn, $user_id) {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE user_id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    } else {
+        header("Location: account-signin.php");
+    }
+
+    // Đóng statement
+    $stmt->close();
+}
+
+function getAddress($conn, $user_id) {
+    $sql = "SELECT * FROM user_shipping_addresses WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $addresses = [];
+    while ($row = $result->fetch_assoc()) {
+        $addresses[] = $row;
+    }
+    return $addresses;
+
+
+}
+
+if (!function_exists('findNameById')) {
+    function findNameById($id, $array, $key = 'Id', $nameKey = 'Name') {
+        foreach ($array as $item) {
+            if ($item[$key] == $id) {
+                return $item[$nameKey];
+            }
+        }
+        return null;
+    }
+}
+
+function convertAddressIdsToNames($address) {
+    // Đường dẫn đến JSON trực tuyến
+    $jsonUrl = 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json';
+
+    // Lấy dữ liệu JSON từ URL
+    $jsonData = file_get_contents($jsonUrl);
+    $locations = json_decode($jsonData, true);
+
+    // Lấy tên Tỉnh/Thành phố
+    $cityName = findNameById($address['city'], $locations);
+
+    // Lấy tên Quận/Huyện từ Tỉnh/Thành phố
+    $districtName = null;
+    $wardName = null;
+    foreach ($locations as $city) {
+        if ($city['Id'] == $address['city']) {
+            $districtName = findNameById($address['district'], $city['Districts']);
+            
+            // Lấy tên Phường/Xã từ Quận/Huyện
+            foreach ($city['Districts'] as $district) {
+                if ($district['Id'] == $address['district']) {
+                    $wardName = findNameById($address['ward'], $district['Wards']);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    // Trả về địa chỉ đã chuyển đổi
+    return $address['first_name'] . " " . 
+           $address['last_name'] . " " . 
+           $address['detailed_address'] . ", " . 
+           $wardName . ", " . 
+           $districtName . ", " . 
+           $cityName;
+}
+
+function getPayment($conn, $user_id) {
+    $sql = "SELECT * FROM user_payment_methods WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $payments = [];
+    while ($row = $result->fetch_assoc()) {
+        $payments[] = $row;
+    }
+    return $payments;
+
+
+}
 ?>
+
+

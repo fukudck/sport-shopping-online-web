@@ -1,3 +1,21 @@
+<?php
+  require_once("php/already_signin.php");
+  if (!isLoggedIn()) {
+    header("Location: account-signin.php");
+    exit();
+  }
+  require_once("php/conn.php");
+  require_once("php/query_func.php");
+
+  $user_id = $_SESSION['user']['id'];
+
+  $user = getUserData($conn, $user_id);
+  $addresses = getAddress($conn, $user_id);
+$conn->close();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -24,7 +42,7 @@
   <body class="handheld-toolbar-enabled">
     <main class="page-wrapper">
       <!-- Add New Address Popup-->
-      <form class="needs-validation modal fade" method="post" id="add-address" tabindex="-1" novalidate>
+      <form class="needs-validation modal fade" method="post" id="add-address" tabindex="-1" novalidate action="php/add_address_process.php">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
@@ -37,13 +55,13 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="firstname">Họ và tên đệm</label>
-                      <input class="form-control" type="text" id="firstname">
+                      <input class="form-control" type="text" id="firstname" name="firstname">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="lastname">Tên</label>
-                      <input class="form-control" type="text" id="lastname">
+                      <input class="form-control" type="text" id="lastname" name="lastname">
                     </div>
                   </div>
                 </div>
@@ -51,13 +69,13 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="email">Địa chỉ E-mail</label>
-                      <input class="form-control" type="email" id="email">
+                      <input class="form-control" type="email" id="email" name="email">
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="phone-num">Số điện thoại</label>
-                      <input class="form-control" type="text" id="phone-num">
+                      <input class="form-control" type="text" id="phone-num" name="phone-num">
                     </div>
                   </div>
                 </div>
@@ -65,7 +83,7 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="city">Tỉnh/Thành phố</label>
-                      <select class="form-select" id="city">
+                      <select class="form-select" id="city" name="city">
                         <option value="" selected>Chọn tỉnh thành</option>           
                       </select>
                     </div>
@@ -73,7 +91,7 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="district">Quận/Huyện</label>
-                      <select class="form-select" id="district">
+                      <select class="form-select" id="district" name="district">
                         <option value="" selected>Chọn quận huyện</option>
                       </select>
                     </div>
@@ -83,7 +101,7 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="ward">Phường/Xã</label>
-                      <select class="form-select" id="ward">
+                      <select class="form-select" id="ward" name="ward">
                         <option value="" selected>Chọn phường xã</option>
                       </select>
                     </div>
@@ -91,14 +109,8 @@
                   <div class="col-sm-6">
                     <div class="mb-3">
                       <label class="form-label" for="particular-address">Địa chỉ cụ thể</label>
-                      <input class="form-control" type="text" id="particular-address">
+                      <input class="form-control" type="text" id="particular-address" name="particular-address">
                     </div>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="address-primary">
-                    <label class="form-check-label" for="address-primary">Make this address primary</label>
                   </div>
                 </div>
               </div>
@@ -136,9 +148,9 @@
             <div class="bg-white rounded-3 shadow-lg pt-1 mb-5 mb-lg-0">
               <div class="d-md-flex justify-content-between align-items-center text-center text-md-start p-4">
                 <div class="d-md-flex align-items-center">
-                  <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><span class="badge bg-warning position-absolute end-0 mt-n2" data-bs-toggle="tooltip" title="Reward points">384</span><img class="rounded-circle" src="img/shop/account/avatar.jpg" alt="Susan Gardner"></div>
+                  <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><img class="rounded-circle" src="<?php echo htmlspecialchars($user['avatar_img_link'])?>"></div>
                   <div class="ps-md-3">
-                    <h3 class="fs-base mb-0">Susan Gardner</h3><span class="text-accent fs-sm">s.gardner@example.com</span>
+                    <h3 class="fs-base mb-0"><?php echo htmlspecialchars($user['first_name']) ." ". htmlspecialchars($user['last_name'])?></h3><span class="text-accent fs-sm"><?php echo htmlspecialchars($user['email'])?></span><br><span class="text-dark fs-sm">Ngày đăng ký: <?php echo htmlspecialchars($user['created_at'])?></span>
                   </div>
                 </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Menu</a>
               </div>
@@ -147,10 +159,10 @@
                   <h3 class="fs-sm mb-0 text-muted">Cài đặt tài khoản</h3>
                 </div>
                 <ul class="list-unstyled mb-0">
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-profile.html"><i class="ci-user opacity-60 me-2"></i>Thông tin tài khoản</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-address.html"><i class="ci-location opacity-60 me-2"></i>Danh sách địa chỉ</a></li>
-                  <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-payment.html"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
-                  <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-signin.html"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 " href="account-profile.php"><i class="ci-user opacity-60 me-2"></i>Thông tin tài khoản</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-address.php"><i class="ci-location opacity-60 me-2"></i>Danh sách địa chỉ</a></li>
+                  <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-payment.php"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
+                  <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="logout.php"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
                 </ul>
               </div>
             </div>
@@ -167,25 +179,22 @@
                 <thead>
                   <tr>
                     <th>Địa chỉ</th>
-                    <th>Tuỳ chọn</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
+                  
+                  <?php 
+                    foreach ($addresses as $address) {
+                    
+                    ?>
+
                   <tr>
-                    <td class="py-3 align-middle">396 Lillian Blvd, Holbrook, NY 11741, USA<span class="align-middle badge bg-info ms-2">Mặc định</span></td>
-                    <td class="py-3 align-middle"><a class="nav-link-style me-2" href="#" data-bs-toggle="tooltip" title="Sửa"><i class="ci-edit"></i></a><a class="nav-link-style text-danger" href="#" data-bs-toggle="tooltip" title="Xoá">
+                    <td class="py-3 align-middle"><?php echo convertAddressIdsToNames($address);?></td>
+                    <td class="py-3 align-middle"><a class="nav-link-style text-danger " href="php/delete_address.php?address_id=<?php echo $address['address_id']?>" data-bs-toggle="tooltip" title="Xoá">
                         <div class="ci-trash"></div></a></td>
                   </tr>
-                  <tr>
-                    <td class="py-3 align-middle">769, Industrial, West Chicago, IL 60185, USA</td>
-                    <td class="py-3 align-middle"><a class="nav-link-style me-2" href="#" data-bs-toggle="tooltip" title="Sửa"><i class="ci-edit"></i></a><a class="nav-link-style text-danger" href="#" data-bs-toggle="tooltip" title="Xoá">
-                        <div class="ci-trash"></div></a></td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 align-middle">514 S. Magnolia St. Orlando, FL 32806, USA</td>
-                    <td class="py-3 align-middle"><a class="nav-link-style me-2" href="#" data-bs-toggle="tooltip" title="Sửa"><i class="ci-edit"></i></a><a class="nav-link-style text-danger" href="#" data-bs-toggle="tooltip" title="Xoá">
-                        <div class="ci-trash"></div></a></td>
-                  </tr>
+                  <?php } ?>
                 </tbody>
               </table>
             </div>
@@ -205,6 +214,8 @@
     
       loadComponent("header", "header.html");
       loadComponent("footer", "footer.html");
+      
+
     </script>
     <!-- Quay ve dau trang--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
     <!-- Vendor scrits: js libraries and plugins-->
