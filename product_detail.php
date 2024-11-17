@@ -41,7 +41,7 @@
 		<link rel="stylesheet" media="screen" href="css/theme.min.css">
 	</head>
 	<!-- Body-->
-	<body class="handheld-toolbar-enabled">
+	<body>
 		<main class="page-wrapper">
 			<!-- bảng size modal fade-->
 			<div class="modal fade" id="size-chart">
@@ -270,21 +270,7 @@
 				</main>
 				<!-- Footer-->
 				<div id="footer"></div>
-				<!-- Toolbar for handheld devices (Default)-->
-				<div class="handheld-toolbar">
-					<div class="d-table table-layout-fixed w-100">
-						<a
-							class="d-table-cell handheld-toolbar-item" href="javascript:void(0)"
-							data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-							onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i
-									class="ci-menu"></i></span><span
-								class="handheld-toolbar-label">Menu</span></a>
-						<a
-							class="d-table-cell handheld-toolbar-item" href="#"><span
-								class="handheld-toolbar-icon"><i class="ci-cart"></i><span
-									class="badge bg-primary rounded-pill ms-1">4</span></span><span
-								class="handheld-toolbar-label">$265.00</span></a></div>
-				</div>
+		
 				<!-- Back To Top Button--><a class="btn-scroll-top" href="#top"
 					data-scroll><span
 						class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i

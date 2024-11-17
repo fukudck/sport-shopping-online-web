@@ -39,7 +39,7 @@
     <link rel="stylesheet" media="screen" href="css/theme.min.css">
   </head>
   <!-- Body-->
-  <body class="handheld-toolbar-enabled">
+  <body>
     <main class="page-wrapper">
       <!-- Add Payment Method-->
       <form class="needs-validation modal fade" action="php/add_payment.php" method="post" id="add-payment" tabindex="-1" novalidate>
