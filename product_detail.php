@@ -1,4 +1,5 @@
 <?php 
+
 	require_once('php/conn.php');
 	require('php/query_func.php');
 
@@ -116,15 +117,17 @@
 
 
 									</div>
-									<form class="mb-grid-gutter" action method="post">
+									<form id="add-to-cart-form" class="mb-grid-gutter" action="cart.php" method="post">
+									<input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product_details['product_id']); ?>">
+									<input type="hidden" name="price" value="<?php echo htmlspecialchars($product_details['price']); ?>">
 										<div class="mb-3">
 											<div class="d-flex justify-content-between align-items-center pb-1">
-												<label class="form-label" for="product-size">Bảng hướng dẫn kích
-													cỡ</label><a class="nav-link-style fs-sm" href="#size-chart"
-													data-bs-toggle="modal"><i
-														class="ci-ruler lead align-middle me-1 mt-n1"></i>Xem</a>											
+												<label class="form-label" for="product-size">Bảng hướng dẫn kích cỡ</label>
+												'<a class="nav-link-style fs-sm" href="#size-chart" data-bs-toggle="modal">
+													<i class="ci-ruler lead align-middle me-1 mt-n1"></i>Xem
+												</a>											
 											</div>
-											<select class="form-select" id="product-size" 
+											<select class="form-select" id="product-size"  name="size"
 												<?php 
 													// Kiểm tra nếu có "No Size", nếu có thì ẩn dropdown
 													if ($product_details['stock_quantity'] == 0 || in_array("No Size", array_column($product_details['sizes'], 'size'))) {
@@ -144,8 +147,7 @@
 												
 												<button class="btn btn-outline-secondary" type="button"
 													onclick="decreaseQuantity()">-</button>
-												<input type="text" class="form-control text-center" id="quantity"
-													name="quantity" value="1" readonly>
+												<input type="text" class="form-control text-center" id="quantity" name="quantity" value="1" readonly>
 												<button class="btn btn-outline-secondary" type="button"
 													onclick="increaseQuantity()">+</button>
 											</div>
@@ -165,9 +167,7 @@
 													}
 												}
 											</script>
-											<button class="btn btn-accent btn-shadow d-block w-100"
-												type="submit" <?php echo ($product_details['stock_quantity']>0) ? '' : 'disabled'; ?>><i class="ci-cart fs-lg me-2" ></i>Thêm vào giỏ
-												hàng</button>
+											<button class="btn btn-accent btn-shadow d-block w-100" type="submit" <?php echo ($product_details['stock_quantity'] > 0) ? '' : 'disabled'; ?>><i class="ci-cart fs-lg me-2" ></i>Thêm vào giỏ hàng</button>
 										</div>
 									</form>
 									<!-- Mô tả sản phẩm-->
@@ -178,8 +178,7 @@
 													data-bs-toggle="collapse" aria-expanded="true"
 													aria-controls="productInfo">
 													<i
-														class="ci-announcement text-muted fs-lg align-middle me-2"></i>Thông
-													tin sản phẩm
+														class="ci-announcement text-muted fs-lg align-middle me-2"></i>Thông tin sản phẩm
 												</a>
 											</h3>
 											<div class="accordion-collapse collapse show" id="productInfo"
