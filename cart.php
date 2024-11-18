@@ -25,7 +25,7 @@
     
 </head>
 
-<body class="handheld-toolbar-enabled">
+<body>
     <main class="page-wrapper">
         <div id="header"></div> 
 
@@ -98,7 +98,7 @@
                             <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="checkout-details.html"><i class="ci-card fs-lg me-2"></i>Tiến hành thanh toán</a>
                         </div>
                     </div>
-                </aside>
+                </aside>    
             </div>
         </div>
     </main>

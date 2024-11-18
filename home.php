@@ -34,7 +34,7 @@
 		
 	</head>
 	<!-- Body-->
-	<body class="handheld-toolbar-enabled">
+	<body>
 		<main class="page-wrapper">
 			<!-- Navbar 3 Level (Light)-->
 			<div id="header"></div>

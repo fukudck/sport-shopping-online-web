@@ -79,8 +79,7 @@ $sub_categories = getCategoryList($conn)['sub_categories'];
 </head>
 <!-- Body-->
 
-<body class="handheld-toolbar-enabled">
-
+<body>
   <main class="page-wrapper">
     <div id="header"></div>
     <div class="page-title-overlap bg-dark pt-4">
@@ -252,20 +251,6 @@ $sub_categories = getCategoryList($conn)['sub_categories'];
       </div>
     </div>
   </main>
-  <div class="handheld-toolbar">
-    <div class="d-table table-layout-fixed w-100">
-      <a
-        class="d-table-cell handheld-toolbar-item"
-        href="#"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#shop-sidebar"><span class="handheld-toolbar-icon"><i class="ci-filter-alt"></i></span><span class="handheld-toolbar-label">Sắp xếp</span></a><a
-        class="d-table-cell handheld-toolbar-item"
-        href="javascript:void(0)"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarCollapse"
-        onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span><span class="handheld-toolbar-label">Menu</span></a><a class="d-table-cell handheld-toolbar-item" href="shop-cart.html"><span class="handheld-toolbar-icon"><i class="ci-cart"></i><span class="badge bg-primary rounded-pill ms-1">{4}</span></span><span class="handheld-toolbar-label">Cart</span></a>
-    </div>
-  </div>
   <div id="footer"></div>
   <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up"> </i></a>
   <script>

@@ -51,7 +51,7 @@ $conn->close();
     
   </head>
   <!-- Body-->
-  <body class="handheld-toolbar-enabled">
+  <body>
     <main class="page-wrapper">
       <div id="header"></div>
       <!-- Page Title-->

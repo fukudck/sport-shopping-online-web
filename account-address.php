@@ -39,7 +39,7 @@ $conn->close();
     <link rel="stylesheet" media="screen" href="css/theme.min.css">
   </head>
   <!-- Body-->
-  <body class="handheld-toolbar-enabled">
+  <body>
     <main class="page-wrapper">
       <!-- Add New Address Popup-->
       <form class="needs-validation modal fade" method="post" id="add-address" tabindex="-1" novalidate action="php/add_address_process.php">
