@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Enter Your severname here
+$servername = "localhost:3308"; // Enter Your severname here
 $username = "root"; // Enter your MySQL database username here
 $password = ""; // // Enter your MySQL database password here
-$dbname = "e_com"; // Enter your Database Name here
+$dbname = "e-com"; // Enter your Database Name here
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
