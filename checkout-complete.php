@@ -1,3 +1,26 @@
+<?php 
+  require_once("php/already_signin.php");
+  if (!isLoggedIn()) {
+    header("Location: account-signin.php");
+    exit();
+  }
+  require_once("php/conn.php");
+  require_once("php/query_func.php");
+  $user_id = $_SESSION['user']['id'];
+  if(!isset($_SESSION['cart']['address']) || !isset($_SESSION['cart']['payment'])) {
+    header("Location: home.php");
+    exit();
+  } else {
+    $payment_method_id = $_SESSION['cart']['payment'];
+    $address_id = $_SESSION['cart']['address'];
+    unset($_SESSION['cart']['payment']);
+    unset($_SESSION['cart']['address']);
+    $order_id = createOrderAndClearCart($conn, $user_id, $payment_method_id, $address_id);
+  }
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -30,8 +53,8 @@
             <div class="card-body text-center">
               <h2 class="h4 pb-3">Cảm ơn bạn đã đặt hàng!</h2>
               <p class="fs-sm mb-2">Đơn hàng của bạn đã được đặt và sẽ được xử lý sớm nhất có thể.</p>
-              <p class="fs-sm mb-2">Hãy đảm bảo bạn ghi lại số đơn hàng của mình, là <span class='fw-medium'>34VB5540K83.</span></p>
-              <p class="fs-sm">Bạn sẽ sớm nhận được email xác nhận đơn hàng của mình. <u>Bây giờ bạn có thể:</u></p><a class="btn btn-secondary mt-3 me-3" href="#">Tiếp tục mua sắm</a><a class="btn btn-primary mt-3" href="order-tracking.html"><i class="ci-location"></i>&nbsp;Theo dõi đơn hàng</a>
+              <p class="fs-sm mb-2">Hãy đảm bảo bạn ghi lại số đơn hàng của mình, là <span class='fw-medium'><?php echo $order_id?></span></p>
+
             </div>
           </div>
         </div>

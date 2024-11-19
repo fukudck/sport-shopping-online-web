@@ -58,17 +58,17 @@
                         <!-- Item-->
                         <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
                             <div class="d-block d-sm-flex align-items-center text-center text-sm-start">
-                                <a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html">
+                                <a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" >
                                     <img src="<?= $item['image_url']; ?>" width="160" alt="Product">
                                 </a>
                                 <div class="pt-2">
                                     <h3 class="product-title fs-base mb-2">
-                                        <a href="shop-single-v1.html"><?= $item['name']; ?></a>
+                                        <a><?= $item['name']; ?></a>
                                     </h3>
                                     <div class="fs-sm">
                                         <span class="text-muted me-2">Kích cỡ:</span><?= $item['size']; ?>
                                     </div>
-                                    <div class="fs-lg text-accent pt-2"><?= number_format($item['price'], 2); ?> <small>VND</small></div>
+                                    <div class="fs-lg text-accent pt-2"><?= number_format($item['price'], 3); ?> <small>VND</small></div>
                                 </div>
                             </div>
                             <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
@@ -89,13 +89,9 @@
                         <div class="py-2 px-xl-2">
                             <div class="text-center mb-4 pb-3 border-bottom">
                                 <h2 class="h6 mb-3 pb-1">Tổng cộng</h2>
-                                <h3 class="fw-normal" id="total-price"><?= number_format(array_sum(array_map(fn($item) => $item['price'] * $item['cart_quantity'], $cart_items)), 2); ?> VND </h3>
+                                <h3 class="fw-normal" id="total-price"><?= number_format(array_sum(array_map(fn($item) => $item['price'] * $item['cart_quantity'], $cart_items)), 3); ?> VND </h3>
                             </div>
-                            <div class="mb-3 mb-4">
-                                <label class="form-label mb-3" for="order-comments"><span class="badge bg-info fs-xs me-2">Ghi chú</span><span class="fw-medium">Để lại lời nhắn</span></label>
-                                <textarea class="form-control" rows="6" id="order-comments"></textarea>
-                            </div>
-                            <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="checkout-details.html"><i class="ci-card fs-lg me-2"></i>Tiến hành thanh toán</a>
+                            <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="checkout-details.php"><i class="ci-card fs-lg me-2"></i>Tiến hành thanh toán</a>
                         </div>
                     </div>
                 </aside>    

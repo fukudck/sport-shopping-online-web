@@ -218,7 +218,7 @@ if (!function_exists('findNameById')) {
 
 function convertAddressIdsToNames($address) {
     // Đường dẫn đến JSON trực tuyến
-    $jsonUrl = 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json';
+    $jsonUrl = 'js/data.json';
 
     // Lấy dữ liệu JSON từ URL
     $jsonData = file_get_contents($jsonUrl);
@@ -268,6 +268,96 @@ function getPayment($conn, $user_id) {
 
 
 }
+
+function createOrderAndClearCart($conn, $user_id, $payment_method_id, $address_id) {
+    global $conn;
+
+    // Bắt đầu giao dịch
+    $conn->begin_transaction();
+
+    try {
+        // 1. Lấy cart_id của người dùng từ bảng carts
+        $sql = "SELECT cart_id FROM carts WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $stmt->bind_result($cart_id);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Kiểm tra xem người dùng có giỏ hàng không
+        if (!$cart_id) {
+            throw new Exception("Không tìm thấy giỏ hàng cho người dùng này.");
+        }
+
+        // 2. Tính tổng giá trị đơn hàng từ cart_items
+        $sql = "
+            SELECT SUM(p.price * ci.quantity) AS total_amount
+            FROM cart_items ci
+            JOIN products p ON ci.product_id = p.product_id
+            WHERE ci.cart_id = ? AND ci.cart_id IN (SELECT cart_id FROM carts WHERE user_id = ?)
+        ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ii', $cart_id, $user_id);
+        $stmt->execute();
+        $stmt->bind_result($total_amount);
+        $stmt->fetch();
+        $stmt->close();
+
+        // Nếu không có tổng giá trị, trả về false
+        if ($total_amount === null) {
+            return false;
+        }
+
+        // 3. Thêm đơn hàng vào bảng orders
+        $sql = "
+            INSERT INTO orders (user_id, address_id, payment_method_id, order_status, total_amount)
+            VALUES (?, ?, ?, 'Pending', ?)
+        ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('iiid', $user_id, $address_id, $payment_method_id, $total_amount);
+        $stmt->execute();
+        $order_id = $stmt->insert_id; // Lấy ID đơn hàng mới vừa tạo
+        $stmt->close();
+
+        // 4. Thêm các mục vào bảng order_items
+        $sql = "
+            INSERT INTO order_items (order_id, product_id, size, quantity, price)
+            SELECT ?, ci.product_id, ci.size, ci.quantity, p.price
+            FROM cart_items ci
+            JOIN products p ON ci.product_id = p.product_id
+            WHERE ci.cart_id = ?
+        ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ii', $order_id, $cart_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // 5. Xóa các mục trong giỏ hàng (cart_items) của user
+        $sql = "DELETE FROM cart_items WHERE cart_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $cart_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // 6. Xóa giỏ hàng của user
+        $sql = "DELETE FROM carts WHERE cart_id = ? AND user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ii', $cart_id, $user_id);
+        $stmt->execute();
+        $stmt->close();
+
+        // 7. Commit giao dịch
+        $conn->commit();
+
+        return $order_id; // Trả về ID đơn hàng mới tạo
+    } catch (Exception $e) {
+        // Nếu có lỗi, rollback giao dịch
+        $conn->rollback();
+        return false;
+    }
+}
+
 ?>
 
 

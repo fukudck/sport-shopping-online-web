@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2024 at 09:47 AM
+-- Generation Time: Nov 19, 2024 at 04:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -40,7 +40,8 @@ INSERT INTO `carts` (`cart_id`, `user_id`) VALUES
 (1, 1),
 (2, 2),
 (3, 3),
-(4, 4);
+(4, 4),
+(11, 10);
 
 -- --------------------------------------------------------
 
@@ -55,6 +56,13 @@ CREATE TABLE `cart_items` (
   `quantity` int(11) NOT NULL,
   `size` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `size`) VALUES
+(8, 11, 11001, 2, 'S');
 
 -- --------------------------------------------------------
 
@@ -114,6 +122,14 @@ CREATE TABLE `orders` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `address_id`, `payment_method_id`, `order_status`, `total_amount`, `created_at`) VALUES
+(3, 5, 4, 5, 'Pending', 1000.00, '2024-11-19 21:56:36'),
+(4, 5, 4, 11, 'Pending', 3440.00, '2024-11-19 22:01:48');
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +144,16 @@ CREATE TABLE `order_items` (
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `size`, `quantity`, `price`) VALUES
+(4, 3, 11002, 'S', 1, 450.00),
+(5, 3, 11007, 'L', 1, 550.00),
+(7, 4, 22007, 'L', 2, 320.00),
+(8, 4, 11006, 'XL', 4, 700.00);
 
 -- --------------------------------------------------------
 
@@ -1913,15 +1939,18 @@ CREATE TABLE `user_payment_methods` (
   `user_id` int(11) NOT NULL,
   `card_number` varchar(20) DEFAULT NULL,
   `card_holder_name` varchar(100) DEFAULT NULL,
-  `expiration_date` date DEFAULT NULL
+  `expiration_date` date DEFAULT NULL,
+  `cvc` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_payment_methods`
 --
 
-INSERT INTO `user_payment_methods` (`payment_method_id`, `user_id`, `card_number`, `card_holder_name`, `expiration_date`) VALUES
-(5, 5, '213421321', '3213123', '2012-12-01');
+INSERT INTO `user_payment_methods` (`payment_method_id`, `user_id`, `card_number`, `card_holder_name`, `expiration_date`, `cvc`) VALUES
+(5, 5, '213421321', '3213123', '2012-12-01', NULL),
+(9, 5, '23123123', '123', '2011-11-01', 222),
+(11, 5, '213123', '123', '2022-12-01', 233);
 
 -- --------------------------------------------------------
 
@@ -1941,6 +1970,18 @@ CREATE TABLE `user_shipping_addresses` (
   `ward` varchar(100) NOT NULL,
   `detailed_address` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_shipping_addresses`
+--
+
+INSERT INTO `user_shipping_addresses` (`address_id`, `user_id`, `first_name`, `last_name`, `email`, `phone_number`, `city`, `district`, `ward`, `detailed_address`) VALUES
+(4, 5, 'ádasd', 'ádasd', '1@B', '123', '02', '027', '00799', 'vippro'),
+(5, 5, 'ád', 'ad', 'd@a', 'dđ', '04', '040', '01693', 'sad'),
+(6, 5, 'dd', 'dsa', 'dasv@a', 'vx', '02', '028', '00838', 'ss'),
+(7, 5, 'qwe', 'qwe', 'qwe2Q@Qe', '111', '22', '206', '07183', 'aqw'),
+(8, 5, 'vvv', 'vv', 'v@bv', '111', '10', '088', '03046', '1'),
+(9, 5, 'ff', 'ff', 'ff@gg', '121', '26', '248', '08926', 'we');
 
 --
 -- Indexes for dumped tables
@@ -2037,13 +2078,13 @@ ALTER TABLE `user_shipping_addresses`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -2055,13 +2096,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -2085,13 +2126,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_payment_methods`
 --
 ALTER TABLE `user_payment_methods`
-  MODIFY `payment_method_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `payment_method_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `user_shipping_addresses`
 --
 ALTER TABLE `user_shipping_addresses`
-  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

@@ -3,7 +3,7 @@ var districts = document.getElementById("district");
 var wards = document.getElementById("ward");
 
 var Parameter = {
-  url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json", 
+  url: "js/data.json", 
   method: "GET", 
   responseType: "application/json", 
 };

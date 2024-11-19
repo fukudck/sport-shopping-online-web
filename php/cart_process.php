@@ -1,6 +1,8 @@
 <?php
 include('conn.php');
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (!isset($_SESSION['user'])) {
     echo "Vui lòng đăng nhập trước khi thêm sản phẩm vào giỏ hàng.";

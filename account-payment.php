@@ -37,6 +37,12 @@
     <link rel="stylesheet" media="screen" href="vendor/tiny-slider/dist/tiny-slider.css"/>
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="css/theme.min.css">
+    <script>
+        function formatInput(input) {
+            const value = input.value.replace(/\D/g, ""); // Xóa các ký tự không phải số
+            input.value = value.padStart(3, "0"); // Thêm 0 vào đầu cho đủ 3 chữ số
+        }
+    </script>
   </head>
   <!-- Body-->
   <body>
@@ -67,7 +73,7 @@
                 </div>
 
                 <div class="col-sm-3">
-                  <input class="form-control" type="text" name="cvc" placeholder="CVC" required>
+                  <input class="form-control" type="text" name="cvc" placeholder="CVC" maxlength="3" onblur="formatInput(this)" required>
                   <div class="invalid-feedback">Vui lòng nhập số CVC!</div>
                 </div>
                 <div class="col-sm-6">
@@ -128,7 +134,7 @@
           <section class="col-lg-8">
             <!-- Toolbar-->
             <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-              <h6 class="fs-base text-light mb-0">Phương thức thanh toán chính được sử dụng theo mặc định</h6><a class="btn btn-primary btn-sm" href="account-signin.html"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
+              <h6 class="fs-base text-light mb-0">Phương thức thanh toán </h6><a class="btn btn-primary btn-sm" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
             <!-- Payment methods list-->
             <div class="table-responsive fs-md mb-4">

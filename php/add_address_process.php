@@ -37,10 +37,23 @@ $stmt->bind_param(
 );
 
 if ($stmt->execute()) {
-    header("Location: ../account-address.php?success=1");
+    $address_id = $conn->insert_id;
+
+    // Lấy tên file từ HTTP_REFERER
+    $referer_path = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
+    $referer_file = basename($referer_path);
+
+    // Kiểm tra nếu file là checkout-details.php
+    if ($referer_file === "checkout-details.php") {
+        header("Location: ../checkout-details.php?address_id=" . $address_id);
+    } else {
+        header("Location: ../account-address.php?success=1");
+    }
 } else {
     header("Location: ../account-address.php?error=1");
 }
+
+
 
 $stmt->close();
 $conn->close();
