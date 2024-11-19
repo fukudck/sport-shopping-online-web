@@ -34,8 +34,8 @@ function getCategories($conn)
 }
 
 
-// lấy phân cấp danh mục để chọn danh mục cha 
-function displayCategoryOptions($categories, $parentId = null, $level = 0)
+// lấy phân cấp danh mục để chọn danh mục cha và selected nếu category_id được chọn
+function displayCategoryOptions($categories, $parentId = null, $level = 0, $selectedCategoryId = null)
 {
   foreach ($categories as $category) {
     if ($category['parent_category_id'] == $parentId) {
@@ -43,14 +43,13 @@ function displayCategoryOptions($categories, $parentId = null, $level = 0)
       echo '<option value="' . $category['category_id'] . '"';
 
       // Nếu là option đã được chọn (nếu có)
-      if (isset($_POST['parent_category']) && $_POST['parent_category'] == $category['category_id']) {
+      if ($selectedCategoryId == $category['category_id']) {
         echo ' selected';
       }
-
       echo '>' . str_repeat('-- ', $level) . $category['category_name'] . '</option>';
 
       // Gọi đệ quy để in các danh mục con (nếu có)
-      displayCategoryOptions($categories, $category['category_id'], $level + 1);
+      displayCategoryOptions($categories, $category['category_id'], $level + 1, $selectedCategoryId);
     }
   }
 }

@@ -5,6 +5,7 @@ if (!isLoggedIn()) {
   exit();
 }
 require_once("php/conn.php");
+include_once('admin/php/products-view.php');
 
 $user_id = $_SESSION['user']['id'];
 
@@ -150,8 +151,38 @@ if ($result->num_rows > 0) {
             </div>
             <!-- Product-->
             <?php
-            include_once('admin/php/products-view.php');
-            ?>
+            if (!empty($products)): ?>
+              <?php foreach ($products as $row): ?>
+                <div class="d-block d-sm-flex align-items-center py-4 border-bottom">
+                  <a class="d-block mb-3 mb-sm-0 me-sm-4 ms-sm-0 mx-auto" href="marketplace-single.html"
+                    style="width: 12.5rem;">
+                    <img class="rounded-3" src="<?= $row['image_url'] ?>" alt="Product">
+                  </a>
+                  <div class="text-center text-sm-start">
+                    <h3 class="h6 product-title mb-2">
+                      <a href="marketplace-single.html"><?= htmlspecialchars($row['name']) ?></a>
+                    </h3>
+                    <div class="d-inline-block text-accent">
+                      <?= number_format($row['price'] * 1000, 0, ',', '.') ?><small>đ</small>
+                    </div>
+                    <div class="d-inline-block text-muted fs-ms border-start ms-2 ps-2"> Ngày tạo: <?= $row['created_at'] ?>
+                    </div>
+                    <div class="d-flex justify-content-center justify-content-sm-start pt-3">
+                      <a href="dashboard-edit-product.php?product_id=<?= $row['product_id'] ?>"
+                        class="btn bg-faded-info btn-icon me-2" data-bs-toggle="tooltip" title="Edit">
+                        <i class="ci-edit text-info"></i>
+                      </a>
+                      <button class="btn bg-faded-danger btn-icon" type="button" data-bs-toggle="tooltip" title="Delete"
+                        onclick="deleteProduct(<?= $row['product_id'] ?>)">
+                        <i class="ci-trash text-danger"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <p>Không có sản phẩm nào để hiển thị.</p>
+            <?php endif; ?>
         </section>
       </div>
     </div>
@@ -160,14 +191,14 @@ if ($result->num_rows > 0) {
   <!-- Footer-->
   <div id="footer"></div>
   <script>
-  async function loadComponent(id, file) {
-    const response = await fetch(file);
-    const html = await response.text();
-    document.getElementById(id).innerHTML = html;
-  }
+    async function loadComponent(id, file) {
+      const response = await fetch(file);
+      const html = await response.text();
+      document.getElementById(id).innerHTML = html;
+    }
 
-  loadComponent("header", "header.html");
-  loadComponent("footer", "footer.html");
+    loadComponent("header", "header.html");
+    loadComponent("footer", "footer.html");
   </script>
   <!-- Quay ve dau trang--><a class="btn-scroll-top" href="#top" data-scroll><span
       class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">

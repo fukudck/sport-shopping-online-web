@@ -44,7 +44,7 @@ if (isset($_POST['addProduct'])) {
     // Tạo đường dẫn cho ảnh
     $category_path = "img/img/$categoryPath/$product_id"; // Đường dẫn phân cấp danh mục và ID sản phẩm
 
-    if (!file_exists($category_path)) {
+    if (!file_exists("../../" . $category_path)) {
       // Tạo thư mục phân cấp nếu chưa tồn tại
       mkdir("../../" . $category_path, 0777, true);
     }
