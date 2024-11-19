@@ -60,12 +60,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
 
-                  <div class="d-flex flex-wrap justify-content-between">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" checked id="remember_me" name="remember_me">
-                      <label class="form-check-label" for="remember_me">Nhớ mật khẩu</label>
-                    </div>
-                  </div>
+                  
                   <hr class="mt-4">
                   <div class="text-end pt-4">
                     <button class="btn btn-primary" type="submit"><i class="ci-sign-in me-2 ms-n21"></i>Đăng nhập</button>
