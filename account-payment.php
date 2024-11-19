@@ -127,6 +127,21 @@
                   <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-payment.php"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
                   <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="logout.php"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
                 </ul>
+                <?php if ($user['user_type'] == 'Admin') {?>
+                <div class="bg-secondary px-4 py-3">
+                  <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                      href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-products.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+                <ul>
+                <?php }?>
               </div>
             </div>
           </aside>

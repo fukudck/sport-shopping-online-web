@@ -35,7 +35,7 @@
                 <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
-                            <li class="breadcrumb-item"><a class="text-nowrap" href="home.html"><i class="ci-home"></i>Trang chủ</a></li>
+                            <li class="breadcrumb-item"><a class="text-nowrap" href="home.php"><i class="ci-home"></i>Trang chủ</a></li>
                             <li class="breadcrumb-item text-nowrap active" aria-current="page">Giỏ hàng</li>
                         </ol>
                     </nav>
@@ -51,7 +51,7 @@
                 <!-- List of items-->
                 <section class="col-lg-8">
                     <div class="d-flex justify-content-between align-items-center pt-3 pb-4 pb-sm-5 mt-1">
-                        <h2 class="h6 text-light mb-0">Sản Phẩm</h2><a class="btn btn-outline-primary btn-sm ps-2" href="shop-grid-ls.html"><i class="ci-arrow-left me-2"></i>Tiếp tục mua sắm</a>
+                        <h2 class="h6 text-light mb-0">Sản Phẩm</h2><a class="btn btn-outline-primary btn-sm ps-2" href="product.php"><i class="ci-arrow-left me-2"></i>Tiếp tục mua sắm</a>
                     </div>
                     <div id="cart-container" >
                     <?php foreach ($cart_items as $item): ?>
