@@ -120,7 +120,9 @@ $sub_categories = getCategoryList($conn)['sub_categories'];
           </div>
           <!-- Products grid-->
           <div class="row mx-n2">
-            <?php foreach ($products as $product) { ?>
+            <?php 
+            if(!empty($products)) {
+            foreach ($products as $product) { ?>
               <!-- Product-->
               <div class="col-md-4 col-sm-6 px-2 mb-4">
                 <div class="card card-product card_container h-100">
@@ -145,7 +147,7 @@ $sub_categories = getCategoryList($conn)['sub_categories'];
                 </div>
               </div>
               <!-- END- Product-->
-            <?php } ?>
+            <?php }} ?>
           </div>
 
 
