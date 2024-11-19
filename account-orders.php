@@ -1,27 +1,9 @@
-<?php
-  require_once("php/already_signin.php");
-  if (!isLoggedIn()) {
-    header("Location: account-signin.php");
-    exit();
-  }
-  require_once("php/conn.php");
-  require_once("php/query_func.php");
-
-  $user_id = $_SESSION['user']['id'];
-
-  $user = getUserData($conn, $user_id);
-  $addresses = getAddress($conn, $user_id);
-$conn->close();
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
-    <title>Địa chỉ của tôi</title>
+    <title>Quản lí đơn hàng</title>
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon and Touch Icons-->
@@ -40,88 +22,7 @@ $conn->close();
   </head>
   <!-- Body-->
   <body>
-    <main class="page-wrapper">
-      <!-- Add New Address Popup-->
-      <form class="needs-validation modal fade" method="post" id="add-address" tabindex="-1" novalidate action="php/add_address_process.php">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Thêm địa chỉ mới</h5>
-              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="row gx-4 gy-3">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="firstname">Họ và tên đệm</label>
-                      <input class="form-control" type="text" id="firstname" name="firstname">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="lastname">Tên</label>
-                      <input class="form-control" type="text" id="lastname" name="lastname">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="email">Địa chỉ E-mail</label>
-                      <input class="form-control" type="email" id="email" name="email">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="phone-num">Số điện thoại</label>
-                      <input class="form-control" type="text" id="phone-num" name="phone-num">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="city">Tỉnh/Thành phố</label>
-                      <select class="form-select" id="city" name="city">
-                        <option value="" selected>Chọn tỉnh thành</option>           
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="district">Quận/Huyện</label>
-                      <select class="form-select" id="district" name="district">
-                        <option value="" selected>Chọn quận huyện</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="ward">Phường/Xã</label>
-                      <select class="form-select" id="ward" name="ward">
-                        <option value="" selected>Chọn phường xã</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="mb-3">
-                      <label class="form-label" for="particular-address">Địa chỉ cụ thể</label>
-                      <input class="form-control" type="text" id="particular-address" name="particular-address">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Đóng</button>
-              <button class="btn btn-primary btn-shadow" type="submit">Thêm</button>
-            </div>
-          </div>
-        </div>
-      </form>
+    <main class="page-wrapper">      
       <div id="header"></div>
       <!-- Page Title-->
       <div class="page-title-overlap bg-dark pt-4">
@@ -132,12 +33,12 @@ $conn->close();
                 <li class="breadcrumb-item"><a class="text-nowrap" href="index-2.html"><i class="ci-home"></i>Trang chủ</a></li>
                 <li class="breadcrumb-item text-nowrap"><a href="#">Tài khoản</a>
                 </li>
-                <li class="breadcrumb-item text-nowrap active" aria-current="page">Địa chỉ</li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">Đơn hàng</li>
               </ol>
             </nav>
           </div>
           <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
-            <h1 class="h3 text-light mb-0">Địa chỉ của tôi</h1>
+            <h1 class="h3 text-light mb-0">Đơn hàng của tôi</h1>
           </div>
         </div>
       </div>
@@ -176,35 +77,77 @@ $conn->close();
           <!-- Content  -->
           <section class="col-lg-8">
             <!-- Toolbar-->
-            <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-              <h6 class="fs-base text-light mb-0">Danh sách địa chỉ của tôi:</h6><a class="btn btn-primary btn-sm" href="account-signin.html"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
+            <div class="d-flex justify-content-between align-items-center pt-lg-2 pb-4 pb-lg-5 mb-lg-3">
+              <a class="btn btn-primary btn-sm d-none d-lg-inline-block" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
-            <!-- Addresses list-->
-            <div class="table-responsive fs-md">
+            <!-- Orders list-->
+            <div class="table-responsive fs-md mb-4">
               <table class="table table-hover mb-0">
                 <thead>
                   <tr>
-                    <th>Địa chỉ</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Ngày đặt hàng</th>
                     <th></th>
+                    <th>Tổng cộng</th>
                   </tr>
                 </thead>
                 <tbody>
-                  
-                  <?php 
-                    foreach ($addresses as $address) {
-                    
-                    ?>
-
                   <tr>
-                    <td class="py-3 align-middle"><?php echo convertAddressIdsToNames($address);?></td>
-                    <td class="py-3 align-middle"><a class="nav-link-style text-danger " href="php/delete_address.php?address_id=<?php echo $address['address_id']?>" data-bs-toggle="tooltip" title="Xoá">
-                        <div class="ci-trash"></div></a></td>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">34VB5540K83</a></td>
+                    <td class="py-3">May 21, 2019</td>
+                    <td class="py-3"><span class="badge bg-info m-0">Đang giao</span></td>
+                    <td class="py-3">$358.75</td>
                   </tr>
-                  <?php } ?>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">78A643CD409</a></td>
+                    <td class="py-3">December 09, 2018</td>
+                    <td class="py-3"><span class="badge bg-danger m-0">Đã huỷ</span></td>
+                    <td class="py-3"><span>$760.50</span></td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">112P45A90V2</a></td>
+                    <td class="py-3">October 15, 2018</td>
+                    <td class="py-3"><span class="badge bg-warning m-0">Delayed</span></td>
+                    <td class="py-3">$1,264.00</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">28BA67U0981</a></td>
+                    <td class="py-3">July 19, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$198.35</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">502TR872W2</a></td>
+                    <td class="py-3">April 04, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$2,133.90</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">47H76G09F33</a></td>
+                    <td class="py-3">March 30, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$86.40</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
-            <div class="text-sm-end pt-4"><a class="btn btn-primary" href="#add-address" data-bs-toggle="modal">Thêm địa chỉ</a></div>
+            <!-- Pagination-->
+            <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#"><i class="ci-arrow-left me-2"></i>Trước</a></li>
+              </ul>
+              <ul class="pagination">
+                <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
+                <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="visually-hidden">(current)</span></span></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
+              </ul>
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" aria-label="Next">Sau<i class="ci-arrow-right ms-2"></i></a></li>
+              </ul>
+            </nav>
           </section>
         </div>
       </div>
