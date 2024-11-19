@@ -60,7 +60,7 @@ if (isset($_POST['editProduct'])) {
   // Lấy phân cấp danh mục mới
   $newHierarchy = getCategoryHierarchy($category, $conn);
   $newPath = "img/img/" . implode('/', $newHierarchy) . "/$product_id";
-  echo  $newPath;
+  $newPathFull = "../../" . $newPath; // Đường dẫn đầy đủ đến thư mục đích
 
   // bước xử lý tạo đường dẫn lưu vào DB và folder trên máy
   if ($conn->query($sql) === TRUE) {
@@ -68,16 +68,24 @@ if (isset($_POST['editProduct'])) {
       // Lấy phân cấp danh mục cũ
       $currentHierarchy = getCategoryHierarchy($_POST['old_category_id'], $conn);
       $currentPath = "img/img/" . implode('/', $currentHierarchy) . "/$product_id";
-      echo  $currentPath;
+      $currentPathFull = "../../" . $currentPath; // Đường dẫn đầy đủ đến thư mục nguồn
 
-      if (file_exists("../../" . $currentPath)) {
-        // Tạo thư mục mới nếu chưa tồn tại
-        if (!file_exists("../../" . ($newPath))) {
-          mkdir($newPath, 0777, true);
+      // Kiểm tra nếu thư mục nguồn tồn tại
+      if (file_exists($currentPathFull)) {
+        // Nếu thư mục đích đã tồn tại
+        if (file_exists($newPathFull)) {
+          // Xóa thư mục đích trước (nếu cần)
+          deleteDirectory($newPathFull); // Hàm xóa thư mục đã được giới thiệu ở trên
+        } else {
+          // Tạo thư mục đích nếu chưa tồn tại
+          mkdir($newPathFull, 0777, true);
         }
 
-        // Di chuyển toàn bộ nội dung từ thư mục cũ sang thư mục mới
-        rename("../../" . $currentPath, "../../" . $newPath);
+        // Sao chép toàn bộ nội dung từ thư mục cũ sang thư mục mới
+        copyDirectory($currentPathFull, $newPathFull); // Hàm sao chép thư mục ở trên
+
+        // Xóa thư mục cũ sau khi sao chép xong
+        deleteDirectory($currentPathFull); // Hàm xóa thư mục đã được giới thiệu
       }
 
       $sql_update_images = "UPDATE product_images 
@@ -87,46 +95,66 @@ if (isset($_POST['editProduct'])) {
       $stmt->bind_param("i", $product_id);
       $stmt->execute();
       $stmt->close();
-    } else {
-      echo "lỗi về danh mục";
     }
 
     // Thay thế ảnh nếu có 
-    // 1. Xóa ảnh cũ khỏi DB và thư mục
-    $sql_select_images = "SELECT image_url FROM product_images WHERE product_id = ?";
-    $stmt = $conn->prepare($sql_select_images);
-    $stmt->bind_param("i", $product_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Kiểm tra nếu có file ảnh mới được tải lên
+    $hasNewImages = isset($_FILES['product-images']) && !empty($_FILES['product-images']['name'][0]);
 
-    while ($row = $result->fetch_assoc()) {
-      $filePath = "../../" . $row['image_url'];
-      if (file_exists($filePath)) {
-        unlink($filePath); // Xóa file ảnh
+    // Nếu có file mới
+    if ($hasNewImages) {
+      // 1. Xóa ảnh cũ khỏi DB và thư mục
+      $sql_select_images = "SELECT image_url FROM product_images WHERE product_id = ?";
+      $stmt = $conn->prepare($sql_select_images);
+      $stmt->bind_param("i", $product_id);
+      $stmt->execute();
+      $result = $stmt->get_result();
+
+      while ($row = $result->fetch_assoc()) {
+        $filePath = "../../" . $row['image_url'];
+        if (file_exists($filePath)) {
+          unlink($filePath); // Xóa file ảnh
+        }
       }
+      $stmt->close();
+
+      // Xóa các bản ghi trong bảng product_images
+      $sql_delete_images = "DELETE FROM product_images WHERE product_id = ?";
+      $stmt = $conn->prepare($sql_delete_images);
+      $stmt->bind_param("i", $product_id);
+      $stmt->execute();
+      $stmt->close();
+
+      // 2. Thêm ảnh mới
+      foreach ($_FILES['product-images']['name'] as $key => $filename) {
+        if ($_FILES['product-images']['error'][$key] === UPLOAD_ERR_OK) {
+          $tmp_name = $_FILES['product-images']['tmp_name'][$key];
+          $image_path = "$newPath/" . pathinfo($filename, PATHINFO_FILENAME) . ".webp";
+
+          // Đọc file và chuyển đổi sang định dạng WebP
+          $image = imagecreatefromstring(file_get_contents($tmp_name));
+          if ($image) {
+            // Lưu file WebP vào thư mục
+            if (!file_exists("../../" . $newPath)) {
+              mkdir("../../" . $newPath, 0777, true); // Tạo thư mục nếu chưa tồn tại
+            }
+            imagewebp($image, "../../" . $image_path);
+            imagedestroy($image);
+
+            // Lưu thông tin file vào cơ sở dữ liệu
+            $sql_image = "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)";
+            $stmt = $conn->prepare($sql_image);
+            $stmt->bind_param("is", $product_id, $image_path);
+            $stmt->execute();
+            $stmt->close();
+          }
+        }
+      }
+    } else {
+      // Không xóa ảnh nếu không có file mới
+      echo "Không có file mới được tải lên. Giữ nguyên các ảnh hiện tại.";
     }
-    $stmt->close();
 
-    // Xóa các bản ghi trong bảng product_images
-    $sql_delete_images = "DELETE FROM product_images WHERE product_id = ?";
-    $stmt = $conn->prepare($sql_delete_images);
-    $stmt->bind_param("i", $product_id);
-    $stmt->execute();
-    $stmt->close();
-
-    // 2. Thêm ảnh mới
-    foreach ($_FILES['product-images']['name'] as $key => $filename) {
-      $tmp_name = $_FILES['product-images']['tmp_name'][$key];
-      $image_path = "$newPath/" . pathinfo($filename, PATHINFO_FILENAME) . ".webp";
-
-      $image = imagecreatefromstring(file_get_contents($tmp_name));
-      imagewebp($image, "../../" . $image_path); // lưu vào thư mục
-      imagedestroy($image);
-
-      // Lưu đường dẫn ảnh vào bảng product_images
-      $sql_image = "INSERT INTO product_images (product_id, image_url) VALUES ('$product_id', '$image_path')";
-      $conn->query($sql_image);
-    }
 
     header("Location: ../../dashboard-edit-product.php?product_id=$product_id");
     exit();

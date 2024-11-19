@@ -41,3 +41,57 @@ function convertToSlug($string)
 
   return $string;
 }
+
+function deleteDirectory($dir)
+{
+  // Kiểm tra nếu thư mục tồn tại
+  if (!is_dir($dir)) {
+    return false;
+  }
+
+  // Lấy tất cả các file và thư mục con trong thư mục
+  $files = array_diff(scandir($dir), array('.', '..'));
+
+  foreach ($files as $file) {
+    $filePath = $dir . DIRECTORY_SEPARATOR . $file;
+    if (is_dir($filePath)) {
+      // Nếu là thư mục con, gọi đệ quy để xóa
+      deleteDirectory($filePath);
+    } else {
+      // Nếu là file, xóa nó
+      unlink($filePath);
+    }
+  }
+
+  // Sau khi xóa hết nội dung, xóa thư mục
+  return rmdir($dir);
+}
+
+function copyDirectory($src, $dst)
+{
+  // Mở thư mục nguồn
+  $dir = opendir($src);
+
+  // Tạo thư mục đích nếu chưa tồn tại
+  if (!file_exists($dst)) {
+    mkdir($dst, 0777, true);
+  }
+
+  // Duyệt tất cả các file và thư mục con trong thư mục nguồn
+  while (($file = readdir($dir)) !== false) {
+    if ($file != '.' && $file != '..') {
+      $srcPath = $src . DIRECTORY_SEPARATOR . $file;
+      $dstPath = $dst . DIRECTORY_SEPARATOR . $file;
+
+      if (is_dir($srcPath)) {
+        // Nếu là thư mục, gọi đệ quy để sao chép thư mục con
+        copyDirectory($srcPath, $dstPath);
+      } else {
+        // Nếu là file, sao chép nó
+        copy($srcPath, $dstPath);
+      }
+    }
+  }
+
+  closedir($dir);
+}
