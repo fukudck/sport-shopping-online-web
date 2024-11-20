@@ -87,8 +87,7 @@ $conn->close();
                     src="<?php echo htmlspecialchars($user['avatar_img_link']) ?>"></div>
                 <div class="ps-md-3">
                   <h3 class="fs-base mb-0">
-                    <?php echo htmlspecialchars($user['first_name']) . " " . htmlspecialchars($user['last_name']) ?>
-                  </h3>
+                    <?php echo htmlspecialchars($user['first_name']) . " " . htmlspecialchars($user['last_name']) ?></h3>
                   <span class="text-accent fs-sm"><?php echo htmlspecialchars($user['email']) ?></span><br><span
                     class="text-dark fs-sm">Ngày đăng ký: <?php echo htmlspecialchars($user['created_at']) ?></span>
                 </div>
@@ -96,31 +95,37 @@ $conn->close();
                 data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Menu</a>
             </div>
             <div class="d-lg-block collapse" id="account-menu">
+
               <div class="bg-secondary px-4 py-3">
                 <h3 class="fs-sm mb-0 text-muted">Cài đặt tài khoản</h3>
               </div>
               <ul class="list-unstyled mb-0">
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
                     href="account-profile.php"><i class="ci-user opacity-60 me-2"></i>Thông tin tài khoản</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
                     href="account-address.php"><i class="ci-location opacity-60 me-2"></i>Danh sách địa chỉ</a></li>
                 <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
                     href="account-payment.php"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
                 <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
                     href="logout.php"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                    href="account-orders.php"><i class="ci-bag opacity-60 me-2"></i>Danh sách đơn hàng</a></li>
               </ul>
-              <div class="bg-secondary px-4 py-3">
-                <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
-              </div>
-              <ul class="list-unstyled mb-0">
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                    href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                    href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                    href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-add-new-product.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+              <?php if ($user['user_type'] == 'Admin') { ?>
+                <div class="bg-secondary px-4 py-3">
+                  <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                      href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-product.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+                  <ul>
+                  <?php } ?>
             </div>
           </div>
         </aside>
@@ -133,17 +138,7 @@ $conn->close();
           </div>
           <!-- Profile form-->
           <form class="needs-validation" novalidate method="post">
-            <div class="bg-secondary rounded-3 p-4 mb-4">
-              <div class="d-flex align-items-center"><img class="rounded"
-                  src="<?php echo htmlspecialchars($user['avatar_img_link']) ?>" width="90">
-                <div class="ps-3">
-                  <button class="btn btn-light btn-shadow btn-sm mb-2" type="button"><i class="ci-loading me-2"></i>Thay
-                    ảnh</button>
-                  <div class="p mb-0 fs-ms text-muted">Tải lên hình ảnh JPG, GIF hoặc PNG. Yêu cầu kích thước 300 x 300.
-                  </div>
-                </div>
-              </div>
-            </div>
+
             <div class="row gx-4 gy-3">
               <div class="col-sm-6">
                 <label class="form-label" for="account-fn">Họ và tên đệm</label>
