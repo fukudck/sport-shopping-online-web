@@ -136,7 +136,7 @@ if ($result->num_rows > 0) {
               <div class="py-2">
               </div>
             </div>
-            <!-- Product-->
+            <!-- Categories-->
             <?php
             include 'admin/php/categories_view.php';
             ?>

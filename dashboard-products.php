@@ -53,7 +53,6 @@ if ($result->num_rows > 0) {
   <link rel="stylesheet" media="screen" href="vendor/tiny-slider/dist/tiny-slider.css" />
   <!-- Main Theme Styles + Bootstrap-->
   <link rel="stylesheet" media="screen" href="css/theme.min.css">
-  <link rel="stylesheet" href="admin/css/style.css">
 </head>
 <!-- Body-->
 
