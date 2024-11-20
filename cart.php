@@ -1,7 +1,7 @@
 <?php
   require_once('php/cart_process.php');
   $cart_items = displayCartItems($conn, $user_id);
-
+  $is_empty = empty($cart_items);
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +91,7 @@
                                 <h2 class="h6 mb-3 pb-1">Tổng cộng</h2>
                                 <h3 class="fw-normal" id="total-price"><?= number_format(array_sum(array_map(fn($item) => $item['price'] * $item['cart_quantity'], $cart_items)), 3); ?> VND </h3>
                             </div>
-                            <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="checkout-details.php"><i class="ci-card fs-lg me-2"></i>Tiến hành thanh toán</a>
+                            <a class="btn btn-primary btn-shadow d-block w-100 mt-4 <?php if($is_empty) echo "disabled-link" ?>" href="checkout-details.php"><i class="ci-card fs-lg me-2"></i>Tiến hành thanh toán</a>
                         </div>
                     </div>
                 </aside>    

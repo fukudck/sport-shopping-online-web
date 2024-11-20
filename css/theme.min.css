@@ -17961,3 +17961,8 @@
   height: 330px; 
   object-fit: cover;
 }
+.disabled-link {
+  pointer-events: none; /* Không cho phép nhấp chuột */
+  opacity: 0.6; /* Làm mờ để người dùng biết trạng thái vô hiệu */
+  cursor: not-allowed; /* Hiển thị con trỏ không hợp lệ */
+}
