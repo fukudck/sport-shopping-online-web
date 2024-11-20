@@ -121,9 +121,9 @@ if ($result->num_rows > 0) {
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
                     href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-add-new-category.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                    href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+                    href="dashboard-add-new-product.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
             </div>
           </div>
         </aside>
@@ -132,7 +132,7 @@ if ($result->num_rows > 0) {
           <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
             <!-- Title-->
             <div class="d-sm-flex flex-wrap justify-content-between align-items-center border-bottom">
-              <h2 class="h3 py-2 me-2 text-center text-sm-start">Your categories</h2>
+              <h2 class="h3 py-2 me-2 text-center text-sm-start">Danh mục</h2>
               <div class="py-2">
               </div>
             </div>

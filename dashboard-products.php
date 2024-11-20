@@ -118,13 +118,12 @@ if ($result->num_rows > 0) {
               <ul class="list-unstyled mb-0">
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
                     href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
-                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
                     href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active"
-                    href="dashboard-add-new-category.php"><i class="ci-package opacity-60 me-2 "></i>Sản phẩm</a>
-                </li>
+                    href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
                 <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                    href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+                    href="dashboard-add-new-product.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
             </div>
           </div>
         </aside>
@@ -156,13 +155,12 @@ if ($result->num_rows > 0) {
             if (!empty($products)): ?>
               <?php foreach ($products as $row): ?>
                 <div class="d-block d-sm-flex align-items-center py-4 border-bottom">
-                  <a class="d-block mb-3 mb-sm-0 me-sm-4 ms-sm-0 mx-auto" href="marketplace-single.html"
-                    style="width: 12.5rem;">
+                  <div class="d-block mb-3 mb-sm-0 me-sm-4 ms-sm-0 mx-auto" style="width: 12.5rem;">
                     <img class="rounded-3" src="<?= $row['image_url'] ?>" alt="Product">
-                  </a>
+                  </div>
                   <div class="text-center text-sm-start">
                     <h3 class="h6 product-title mb-2">
-                      <a href="marketplace-single.html"><?= htmlspecialchars($row['name']) ?></a>
+                      <?= htmlspecialchars($row['name']) ?>
                     </h3>
                     <div class="d-inline-block text-accent">
                       <?= number_format($row['price'] * 1000, 0, ',', '.') ?><small>đ</small>

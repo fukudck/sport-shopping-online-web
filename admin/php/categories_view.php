@@ -21,7 +21,7 @@ function printCategories($categories, $conn)
 
       echo '<h3 class="h6 product-title mb-2"><span>' . $category['category_name'] . '</span></h3>';
 
-      echo '<div class="d-inline-block text-muted fs-ms border-start ms-2 ps-2">Parent Category: <span class="fw-medium">' . getParentCategoryName($category['parent_category_id'], $conn) . '</span></div>';
+      echo '<div class="d-inline-block text-muted fs-ms border-start ms-2 ps-2">Danh mục cha: <span class="fw-medium">' . getParentCategoryName($category['parent_category_id'], $conn) . '</span></div>';
 
       echo '<div class="d-flex justify-content-center justify-content-sm-start pt-3">';
       echo '<button class="btn bg-faded-info btn-icon me-2" type="button" data-bs-toggle="tooltip" title="Edit"><i class="ci-edit text-info"></i></button>';
