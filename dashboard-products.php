@@ -53,6 +53,7 @@ if ($result->num_rows > 0) {
   <link rel="stylesheet" media="screen" href="vendor/tiny-slider/dist/tiny-slider.css" />
   <!-- Main Theme Styles + Bootstrap-->
   <link rel="stylesheet" media="screen" href="css/theme.min.css">
+  <link rel="stylesheet" href="admin/css/style.css">
 </head>
 <!-- Body-->
 
@@ -136,52 +137,115 @@ if ($result->num_rows > 0) {
               <h2 class="h3 py-2 me-2 text-center text-sm-start">Your products</h2>
               <div class="py-2">
                 <div class="d-flex flex-nowrap align-items-center pb-3">
-                  <label class="form-label fw-normal text-nowrap mb-0 me-2" for="sorting">Sort by:</label>
-                  <select class="form-select form-select-sm me-2" id="sorting">
-                    <option>Date Created</option>
-                    <option>Product Name</option>
-                    <option>Price</option>
-                    <option>Your Rating</option>
-                    <option>Updates</option>
-                  </select>
-                  <button class="btn btn-outline-secondary btn-sm px-2" type="button"><i
-                      class="ci-arrow-up"></i></button>
+                  <form method="get" class="d-flex justify-content-end mb-3">
+                    <label for="sorting" class="form-label fw-normal text-nowrap mb-0 me-2">Sort by:</label>
+                    <select class="form-select form-select-sm me-2" id="sorting" name="sort_by"
+                      onchange="this.form.submit()">
+                      <option value="p.price" <?= $sort_by == 'p.price' ? 'selected' : '' ?>>Price</option>
+                      <option value="p.created_at" <?= $sort_by == 'p.created_at' ? 'selected' : '' ?>>Date Created
+                      </option>
+                      <option value="p.name" <?= $sort_by == 'p.name' ? 'selected' : '' ?>>Product Name
+                      </option>
+                    </select>
+                    <input type="hidden" name="page" value="<?= $current_page ?>">
+                  </form>
                 </div>
               </div>
             </div>
             <!-- Product-->
             <?php
             if (!empty($products)): ?>
-            <?php foreach ($products as $row): ?>
-            <div class="d-block d-sm-flex align-items-center py-4 border-bottom">
-              <a class="d-block mb-3 mb-sm-0 me-sm-4 ms-sm-0 mx-auto" href="marketplace-single.html"
-                style="width: 12.5rem;">
-                <img class="rounded-3" src="<?= $row['image_url'] ?>" alt="Product">
-              </a>
-              <div class="text-center text-sm-start">
-                <h3 class="h6 product-title mb-2">
-                  <a href="marketplace-single.html"><?= htmlspecialchars($row['name']) ?></a>
-                </h3>
-                <div class="d-inline-block text-accent">
-                  <?= number_format($row['price'] * 1000, 0, ',', '.') ?><small>đ</small>
-                </div>
-                <div class="d-inline-block text-muted fs-ms border-start ms-2 ps-2"> Ngày tạo: <?= $row['created_at'] ?>
-                </div>
-                <div class="d-flex justify-content-center justify-content-sm-start pt-3">
-                  <a href="dashboard-edit-product.php?product_id=<?= $row['product_id'] ?>"
-                    class="btn bg-faded-info btn-icon me-2" data-bs-toggle="tooltip" title="Edit">
-                    <i class="ci-edit text-info"></i>
+              <?php foreach ($products as $row): ?>
+                <div class="d-block d-sm-flex align-items-center py-4 border-bottom">
+                  <a class="d-block mb-3 mb-sm-0 me-sm-4 ms-sm-0 mx-auto" href="marketplace-single.html"
+                    style="width: 12.5rem;">
+                    <img class="rounded-3" src="<?= $row['image_url'] ?>" alt="Product">
                   </a>
-                  <button class="btn bg-faded-danger btn-icon" type="button" data-bs-toggle="tooltip" title="Delete"
-                    onclick="deleteProduct(<?= $row['product_id'] ?>)">
-                    <i class="ci-trash text-danger"></i>
-                  </button>
+                  <div class="text-center text-sm-start">
+                    <h3 class="h6 product-title mb-2">
+                      <a href="marketplace-single.html"><?= htmlspecialchars($row['name']) ?></a>
+                    </h3>
+                    <div class="d-inline-block text-accent">
+                      <?= number_format($row['price'] * 1000, 0, ',', '.') ?><small>đ</small>
+                    </div>
+                    <div class="d-inline-block text-muted fs-ms border-start ms-2 ps-2"> Ngày tạo: <?= $row['created_at'] ?>
+                    </div>
+                    <div class="d-flex justify-content-center justify-content-sm-start pt-3">
+                      <a href="dashboard-edit-product.php?product_id=<?= $row['product_id'] ?>"
+                        class="btn bg-faded-info btn-icon me-2" data-bs-toggle="tooltip" title="Edit">
+                        <i class="ci-edit text-info"></i>
+                      </a>
+                      <button class="btn bg-faded-danger btn-icon" type="button" data-bs-toggle="tooltip" title="Delete"
+                        onclick="deleteProduct(<?= $row['product_id'] ?>)">
+                        <i class="ci-trash text-danger"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <?php endforeach; ?>
+              <?php endforeach; ?>
+              <?php
+              // Hiển thị nút phân trang với giới hạn trang
+              $total_pages = ceil($total_products / $products_per_page);
+              $max_display_pages = 5; // Số lượng trang hiển thị tối đa (bao gồm trang hiện tại)
+
+              if ($total_pages > 1) {
+                echo '<nav aria-label="Page navigation" class="mt-5">';
+                echo '<ul class="pagination justify-content-center">';
+
+                // Nút "Previous"
+                if ($current_page > 1) {
+                  $prev_page = $current_page - 1;
+                  echo "<li class='page-item'><a class='page-link' href='?page=$prev_page&sort_by=$sort_by' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
+                } else {
+                  echo "<li class='page-item disabled'><span class='page-link' aria-hidden='true'>&laquo;</span></li>";
+                }
+
+                // Các trang
+                $start_page = max(1, $current_page - floor($max_display_pages / 2));
+                $end_page = min($total_pages, $start_page + $max_display_pages - 1);
+
+                // Điều chỉnh lại $start_page nếu $end_page gần $total_pages
+                if ($end_page - $start_page + 1 < $max_display_pages) {
+                  $start_page = max(1, $end_page - $max_display_pages + 1);
+                }
+
+                // Hiển thị trang đầu tiên nếu cần
+                if ($start_page > 1) {
+                  echo "<li class='page-item'><a class='page-link' href='?page=1&sort_by=$sort_by'>1</a></li>";
+                  if ($start_page > 2) {
+                    echo "<li class='page-item disabled'><span class='page-link'>...</span></li>";
+                  }
+                }
+
+                // Hiển thị các trang ở giữa
+                for ($i = $start_page; $i <= $end_page; $i++) {
+                  $active_class = $i == $current_page ? "active" : "";
+                  echo "<li class='page-item $active_class'><a class='page-link' href='?page=$i&sort_by=$sort_by'>$i</a></li>";
+                }
+
+                // Hiển thị trang cuối nếu cần
+                if ($end_page < $total_pages) {
+                  if ($end_page < $total_pages - 1) {
+                    echo "<li class='page-item disabled'><span class='page-link'>...</span></li>";
+                  }
+                  echo "<li class='page-item'><a class='page-link' href='?page=$total_pages&sort_by=$sort_by'>$total_pages</a></li>";
+                }
+
+                // Nút "Next"
+                if ($current_page < $total_pages) {
+                  $next_page = $current_page + 1;
+                  echo "<li class='page-item'><a class='page-link' href='?page=$next_page&sort_by=$sort_by' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
+                } else {
+                  echo "<li class='page-item disabled'><span class='page-link' aria-hidden='true'>&raquo;</span></li>";
+                }
+
+                echo '</ul>';
+                echo '</nav>';
+              }
+              ?>
+
             <?php else: ?>
-            <p>Không có sản phẩm nào để hiển thị.</p>
+              <p>Không có sản phẩm nào để hiển thị.</p>
             <?php endif; ?>
         </section>
       </div>
@@ -191,14 +255,14 @@ if ($result->num_rows > 0) {
   <!-- Footer-->
   <div id="footer"></div>
   <script>
-  async function loadComponent(id, file) {
-    const response = await fetch(file);
-    const html = await response.text();
-    document.getElementById(id).innerHTML = html;
-  }
+    async function loadComponent(id, file) {
+      const response = await fetch(file);
+      const html = await response.text();
+      document.getElementById(id).innerHTML = html;
+    }
 
-  loadComponent("header", "header.html");
-  loadComponent("footer", "footer.html");
+    loadComponent("header", "header.html");
+    loadComponent("footer", "footer.html");
   </script>
   <!-- Quay ve dau trang--><a class="btn-scroll-top" href="#top" data-scroll><span
       class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">

@@ -1,23 +1,22 @@
 <?php
 include_once  'category_functions.php';
 include_once 'php/conn.php';
+include_once "myfunctions.php";
 
-$sql = "SELECT products.product_id, products.name, products.price, products.created_at, images.image_url
-        FROM products
-        JOIN (
-            SELECT product_id, MIN(image_url) AS image_url
-            FROM product_images
-            GROUP BY product_id
-        ) AS images ON products.product_id = images.product_id";
-$result = $conn->query($sql);
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0
+  ? intval($_GET['page'])
+  : 1;
 
-$products = []; // Biến lưu trữ dữ liệu sản phẩm
+$sort_by = $_GET['sort_by'] ?? 'product_id'; // Giá trị mặc định nếu không có sort_by
 
-if ($result->num_rows > 0) {
-  while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
-  }
-}
+$products_per_page = 7;
+
+// Lấy danh sách sản phẩm
+$product_list = getProductList($conn, $sort_by, "", $current_page, $products_per_page);
+$products = $product_list['pC'];
+$total_products = $product_list['total_product'];
+
+
 
 // Xóa sản phẩm 
 // Kiểm tra nếu có yêu cầu xóa sản phẩm
