@@ -1,5 +1,5 @@
 <?php
-require("php/conn.php");
+
 // đổ ra giao diện dashboard category
 // function getCategoriesIntoIndex($conn, $parent_id = null)
 // {
