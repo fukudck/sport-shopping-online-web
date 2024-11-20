@@ -358,6 +358,21 @@ function createOrderAndClearCart($conn, $user_id, $payment_method_id, $address_i
     }
 }
 
+function getOrders($conn, $user_id) {
+    $sql = "SELECT * FROM  orders WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $orders = [];
+    while ($row = $result->fetch_assoc()) {
+        $orders[] = $row;
+    }
+    return $orders;
+
+
+}
+
 ?>
 
 

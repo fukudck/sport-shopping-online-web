@@ -1,3 +1,19 @@
+<?php
+  require_once("php/already_signin.php");
+  if (!isLoggedIn()) {
+    header("Location: account-signin.php");
+    exit();
+  }
+  require_once("php/conn.php");
+  require_once("php/query_func.php");
+
+  $user_id = $_SESSION['user']['id'];
+
+  $user = getUserData($conn, $user_id);
+  $orders = getOrders($conn, $user_id);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
@@ -56,29 +72,40 @@
                 </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Menu</a>
               </div>
               <div class="d-lg-block collapse" id="account-menu">
-                <div class="bg-secondary px-4 py-3">
-                  <h3 class="fs-sm mb-0 text-muted">Bảng điều khiển</h3>
-                </div>
-                <ul class="list-unstyled mb-0">
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-orders.php"><i class="ci-bag opacity-60 me-2"></i>Danh sách đơn hàng<span class="fs-sm text-muted ms-auto">1</span></a></li>
-                </ul>
+                
                 <div class="bg-secondary px-4 py-3">
                   <h3 class="fs-sm mb-0 text-muted">Cài đặt tài khoản</h3>
                 </div>
                 <ul class="list-unstyled mb-0">
                   <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 " href="account-profile.php"><i class="ci-user opacity-60 me-2"></i>Thông tin tài khoản</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-address.php"><i class="ci-location opacity-60 me-2"></i>Danh sách địa chỉ</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 " href="account-address.php"><i class="ci-location opacity-60 me-2"></i>Danh sách địa chỉ</a></li>
                   <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-payment.php"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
                   <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="logout.php"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-orders.php"><i class="ci-bag opacity-60 me-2"></i>Danh sách đơn hàng</a></li>
                 </ul>
+                <?php if ($user['user_type'] == 'Admin') {?>
+                <div class="bg-secondary px-4 py-3">
+                  <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
+                      href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+                      href="dashboard-add-new-products.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
+                <ul>
+                <?php }?>
               </div>
             </div>
           </aside>
           <!-- Content  -->
           <section class="col-lg-8">
             <!-- Toolbar-->
-            <div class="d-flex justify-content-between align-items-center pt-lg-2 pb-4 pb-lg-5 mb-lg-3">
-              <a class="btn btn-primary btn-sm d-none d-lg-inline-block" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
+            <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
+              <h6 class="fs-base text-light mb-0">Danh sách đơn hàng:</h6><a class="btn btn-primary btn-sm" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
             <!-- Orders list-->
             <div class="table-responsive fs-md mb-4">
@@ -92,62 +119,39 @@
                   </tr>
                 </thead>
                 <tbody>
+                <?php 
+                    foreach ($orders as $order) {
+                    
+                    ?>
                   <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">34VB5540K83</a></td>
-                    <td class="py-3">May 21, 2019</td>
-                    <td class="py-3"><span class="badge bg-info m-0">Đang giao</span></td>
-                    <td class="py-3">$358.75</td>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" data-bs-toggle="modal"><?php echo $order['order_id']?></a></td>
+                    <td class="py-3"><?php echo $order['created_at']?></td>
+                    <td class="py-3">
+                      <?php switch($order['order_status']) {
+                        case "Pending":
+                          echo '<span class="badge bg-info m-0">Đang chuẩn bị</span>';
+                          break;
+                        case "Delivered":
+                          echo '<span class="badge bg-success m-0">Đã giao</span>';
+                          break;
+                        case "Cancelled":
+                          echo '<span class="badge bg-danger m-0">Đã huỷ</span>';
+                          break;
+                        case "Shipped":
+                          echo '<span class="badge bg-info m-0">Đang giao</span>';
+                          break;
+                        
+                        
+                    
+                      }?>
+                    </td>
+                    <td class="py-3"><?php echo $order['total_amount']?>0 VNĐ</td>
                   </tr>
-                  <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">78A643CD409</a></td>
-                    <td class="py-3">December 09, 2018</td>
-                    <td class="py-3"><span class="badge bg-danger m-0">Đã huỷ</span></td>
-                    <td class="py-3"><span>$760.50</span></td>
-                  </tr>
-                  <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">112P45A90V2</a></td>
-                    <td class="py-3">October 15, 2018</td>
-                    <td class="py-3"><span class="badge bg-warning m-0">Delayed</span></td>
-                    <td class="py-3">$1,264.00</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">28BA67U0981</a></td>
-                    <td class="py-3">July 19, 2018</td>
-                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
-                    <td class="py-3">$198.35</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">502TR872W2</a></td>
-                    <td class="py-3">April 04, 2018</td>
-                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
-                    <td class="py-3">$2,133.90</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">47H76G09F33</a></td>
-                    <td class="py-3">March 30, 2018</td>
-                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
-                    <td class="py-3">$86.40</td>
-                  </tr>
+                  
+                  <?php } ?>
                 </tbody>
               </table>
             </div>
-            <!-- Pagination-->
-            <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#"><i class="ci-arrow-left me-2"></i>Trước</a></li>
-              </ul>
-              <ul class="pagination">
-                <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
-                <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="visually-hidden">(current)</span></span></li>
-                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
-                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
-                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
-                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
-              </ul>
-              <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#" aria-label="Next">Sau<i class="ci-arrow-right ms-2"></i></a></li>
-              </ul>
-            </nav>
           </section>
         </div>
       </div>
