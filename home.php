@@ -126,7 +126,7 @@
 									style="width: 150px;" alt="Brand"></a></div>
 						<div class="col-md-3 col-sm-4 col-6"><a
 								class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter"
-								href="#"><img class="d-block mx-auto" src="img/shop/brands/02.png"
+								href="#"><img class="d-block mx-auto" src="img/shop/brands/coolmate(2).jpg"
 									style="width: 150px;" alt="Brand"></a></div>
 						<div class="col-md-3 col-sm-4 col-6"><a
 								class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter"
@@ -162,11 +162,11 @@
 									style="width: 150px;" alt="Brand"></a></div>
 						<div class="col-md-3 col-sm-4 col-6"><a
 								class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter"
-								href="#"><img class="d-block mx-auto" src="img/shop/brands/11.png"
+								href="#"><img class="d-block mx-auto" src="img/shop/brands/02.png"
 									style="width: 150px;" alt="Brand"></a></div>
 						<div class="col-md-3 col-sm-4 col-6"><a
 								class="d-block bg-white shadow-sm rounded-3 py-3 py-sm-4 mb-grid-gutter"
-								href="#"><img class="d-block mx-auto" src="img/shop/brands/12.png"
+								href="#"><img class="d-block mx-auto" src="img/shop/brands/12.jpg"
 									style="width: 150px;" alt="Brand"></a></div>
 					</div>
 				</section>
