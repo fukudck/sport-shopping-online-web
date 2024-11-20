@@ -1,27 +1,9 @@
-<?php
-  require_once("php/already_signin.php");
-  if (!isLoggedIn()) {
-    header("Location: account-signin.php");
-    exit();
-  }
-  require_once("php/conn.php");
-  require_once("php/query_func.php");
-
-  $user_id = $_SESSION['user']['id'];
-
-  $user = getUserData($conn, $user_id);
-  $payments = getPayment($conn, $user_id);
-  $conn->close();
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
-    <title>Phương thức thanh toán</title>
+    <title>Quản lí đơn hàng</title>
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon and Touch Icons-->
@@ -37,54 +19,10 @@
     <link rel="stylesheet" media="screen" href="vendor/tiny-slider/dist/tiny-slider.css"/>
     <!-- Main Theme Styles + Bootstrap-->
     <link rel="stylesheet" media="screen" href="css/theme.min.css">
-    <script>
-        function formatInput(input) {
-            const value = input.value.replace(/\D/g, ""); // Xóa các ký tự không phải số
-            input.value = value.padStart(3, "0"); // Thêm 0 vào đầu cho đủ 3 chữ số
-        }
-    </script>
   </head>
   <!-- Body-->
   <body>
-    <main class="page-wrapper">
-      <!-- Add Payment Method-->
-      <form class="needs-validation modal fade" action="php/add_payment.php" method="post" id="add-payment" tabindex="-1" novalidate>
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Thêm thẻ mới</h5>
-              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="row g-3 mb-2">
-                <div class="col-sm-6">
-                  <input class="form-control" type="text" name="number" placeholder="Card Number" required>
-                  <div class="invalid-feedback">Vui lòng nhập số thẻ!</div>
-                </div>
-                <div class="col-sm-6">
-                  <input class="form-control" type="text" name="name" placeholder="Full Name" required>
-                  <div class="invalid-feedback">Vui lòng nhập tên chủ thẻ!</div>
-                </div>
-                <div class="col-sm-3">
-                  <input class="form-control" type="text" name="expiry" placeholder="MM/YY" required 
-                    pattern="^(0[1-9]|1[0-2])\/([0-9]{2})$" 
-                    title="Vui lòng nhập đúng định dạng MM/YY (Ví dụ: 12/24)">
-                  <div class="invalid-feedback">Vui lòng nhập thời hạn của thẻ!</div>
-                </div>
-
-                <div class="col-sm-3">
-                  <input class="form-control" type="text" name="cvc" placeholder="CVC" maxlength="3" onblur="formatInput(this)" required>
-                  <div class="invalid-feedback">Vui lòng nhập số CVC!</div>
-                </div>
-                <div class="col-sm-6">
-                  <button class="btn btn-primary d-block w-100" type="submit">Thêm</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-      
+    <main class="page-wrapper">      
       <div id="header"></div>
       <!-- Page Title-->
       <div class="page-title-overlap bg-dark pt-4">
@@ -95,12 +33,12 @@
                 <li class="breadcrumb-item"><a class="text-nowrap" href="index-2.html"><i class="ci-home"></i>Trang chủ</a></li>
                 <li class="breadcrumb-item text-nowrap"><a href="#">Tài khoản</a>
                 </li>
-                <li class="breadcrumb-item text-nowrap active" aria-current="page">Phương thức thanh toán</li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">Đơn hàng</li>
               </ol>
             </nav>
           </div>
           <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
-            <h1 class="h3 text-light mb-0">Phương thức thanh toán của tôi</h1>
+            <h1 class="h3 text-light mb-0">Đơn hàng của tôi</h1>
           </div>
         </div>
       </div>
@@ -133,67 +71,87 @@
                   <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="account-payment.php"><i class="ci-card opacity-60 me-2"></i>Phương thức thanh toán</a></li>
                   <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="logout.php"><i class="ci-sign-out opacity-60 me-2"></i>Đăng xuất</a></li>
                 </ul>
-                <?php if ($user['user_type'] == 'Admin') {?>
-                <div class="bg-secondary px-4 py-3">
-                  <h3 class="fs-sm mb-0 text-muted">Cài đặt quản trị</h3>
-                </div>
-                <ul class="list-unstyled mb-0">
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 "
-                      href="dashboard-categories.php"><i class="ci-view-list opacity-60 me-2"></i>Danh mục</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="dashboard-add-new-category.php"><i class="ci-add opacity-60 me-2"></i>Thêm danh mục</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="dashboard-products.php"><i class="ci-package opacity-60 me-2"></i>Sản phẩm</a></li>
-                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
-                      href="dashboard-add-new-products.php"><i class="ci-add opacity-60 me-2"></i>Thêm sản phẩm</a></li>
-                <ul>
-                <?php }?>
               </div>
             </div>
           </aside>
           <!-- Content  -->
           <section class="col-lg-8">
             <!-- Toolbar-->
-            <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-              <h6 class="fs-base text-light mb-0">Phương thức thanh toán </h6><a class="btn btn-primary btn-sm" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
+            <div class="d-flex justify-content-between align-items-center pt-lg-2 pb-4 pb-lg-5 mb-lg-3">
+              <a class="btn btn-primary btn-sm d-none d-lg-inline-block" href="logout.php"><i class="ci-sign-out me-2"></i>Đăng xuất</a>
             </div>
-            <!-- Payment methods list-->
+            <!-- Orders list-->
             <div class="table-responsive fs-md mb-4">
               <table class="table table-hover mb-0">
                 <thead>
                   <tr>
-                    <th>Thẻ tín dụng/ghi nợ của bạn</th>
-                    <th>Tên chủ thẻ</th>
-                    <th>Hết hạn vào</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Ngày đặt hàng</th>
                     <th></th>
+                    <th>Tổng cộng</th>
                   </tr>
                 </thead>
                 <tbody>
-                <?php 
-                    foreach ($payments as $payment) {
-                    
-                    ?>
                   <tr>
-                    <td class="py-3 align-middle">
-                      <div class="d-flex align-items-center"><img src="img/card-visa.png" width="39" alt="Visa">
-                        <div class="ps-2"><span class="fw-medium text-heading me-1">Thẻ</span>**** **** **** <?php echo substr($payment['card_number'], -4);?>
-                      </div>
-                    </td>
-                    <td class="py-3 align-middle"><?php echo $payment['card_holder_name']?></td>
-                    <td class="py-3 align-middle"><?php echo date("m/y", strtotime($payment['expiration_date']))?></td>
-                    <td class="py-3 align-middle"><a class="nav-link-style text-danger" href="php/delete_payment.php?payment_id=<?php echo $payment['payment_method_id']?>" data-bs-toggle="tooltip" title="Xoá">
-                        <div class="ci-trash"></div></a></td>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">34VB5540K83</a></td>
+                    <td class="py-3">May 21, 2019</td>
+                    <td class="py-3"><span class="badge bg-info m-0">Đang giao</span></td>
+                    <td class="py-3">$358.75</td>
                   </tr>
-                  <?php } ?>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">78A643CD409</a></td>
+                    <td class="py-3">December 09, 2018</td>
+                    <td class="py-3"><span class="badge bg-danger m-0">Đã huỷ</span></td>
+                    <td class="py-3"><span>$760.50</span></td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">112P45A90V2</a></td>
+                    <td class="py-3">October 15, 2018</td>
+                    <td class="py-3"><span class="badge bg-warning m-0">Delayed</span></td>
+                    <td class="py-3">$1,264.00</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">28BA67U0981</a></td>
+                    <td class="py-3">July 19, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$198.35</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">502TR872W2</a></td>
+                    <td class="py-3">April 04, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$2,133.90</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#order-details" data-bs-toggle="modal">47H76G09F33</a></td>
+                    <td class="py-3">March 30, 2018</td>
+                    <td class="py-3"><span class="badge bg-success m-0">Đã giao</span></td>
+                    <td class="py-3">$86.40</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
-            <div class="text-sm-end"><a class="btn btn-primary" href="#add-payment" data-bs-toggle="modal">Thêm thẻ mới</a></div>
+            <!-- Pagination-->
+            <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#"><i class="ci-arrow-left me-2"></i>Trước</a></li>
+              </ul>
+              <ul class="pagination">
+                <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
+                <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="visually-hidden">(current)</span></span></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">2</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">3</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">4</a></li>
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="#">5</a></li>
+              </ul>
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" aria-label="Next">Sau<i class="ci-arrow-right ms-2"></i></a></li>
+              </ul>
+            </nav>
           </section>
         </div>
       </div>
     </main>
-    <!-- Footer-->
     <!-- Footer-->
     <div id="footer"></div>
     <script>
@@ -208,15 +166,16 @@
       
 
     </script>
-    <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
+    <!-- Quay ve dau trang--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
     <!-- Vendor scrits: js libraries and plugins-->
     <script src="vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/simplebar/dist/simplebar.min.js"></script>
     <script src="vendor/tiny-slider/dist/min/tiny-slider.js"></script>
     <script src="vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+    <!--diaphuong script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="js/diaphuong.js"></script>
     <!-- Main theme script-->
     <script src="js/theme.min.js"></script>
   </body>
-
-<!-- Mirrored from cartzilla.createx.studio/account-payment.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Oct 2023 15:50:39 GMT -->
 </html>

@@ -21,7 +21,7 @@ $conn->close();
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
-    <title>Thanh toán</title>
+    <title>Địa chỉ của tôi</title>
     <!-- Viewport-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon and Touch Icons-->
@@ -155,6 +155,12 @@ $conn->close();
                 </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Menu</a>
               </div>
               <div class="d-lg-block collapse" id="account-menu">
+                <div class="bg-secondary px-4 py-3">
+                  <h3 class="fs-sm mb-0 text-muted">Bảng điều khiển</h3>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="account-orders.php"><i class="ci-bag opacity-60 me-2"></i>Danh sách đơn hàng<span class="fs-sm text-muted ms-auto">1</span></a></li>
+                </ul>
                 <div class="bg-secondary px-4 py-3">
                   <h3 class="fs-sm mb-0 text-muted">Cài đặt tài khoản</h3>
                 </div>
