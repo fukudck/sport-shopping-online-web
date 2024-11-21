@@ -28,7 +28,9 @@ if ($result->num_rows > 0) {
   // echo "Số điện thoại: " . htmlspecialchars($user['phone_number']) . "<br>";
 }
 
-
+if($user['user_type'] != "Admin") {
+  header("Location: home.php");
+}
 $categories = getCategories($conn);
 
 ?>
