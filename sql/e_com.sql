@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 08:25 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Máy chủ: 127.0.0.1
+-- Thời gian đã tạo: Th10 21, 2024 lúc 03:34 AM
+-- Phiên bản máy phục vụ: 10.4.32-MariaDB
+-- Phiên bản PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,11 +18,24 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `e_com`
+-- Cơ sở dữ liệu: `e_com`
 --
+CREATE DATABASE IF NOT EXISTS `e_com` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `e_com`;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `carts`
+-- Cấu trúc bảng cho bảng `carts`
+--
+
+CREATE TABLE `carts` (
+  `cart_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `carts`
 --
 
 INSERT INTO `carts` (`cart_id`, `user_id`) VALUES
@@ -31,15 +44,43 @@ INSERT INTO `carts` (`cart_id`, `user_id`) VALUES
 (3, 3),
 (11, 10);
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `cart_items`
+-- Cấu trúc bảng cho bảng `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `cart_item_id` int(11) NOT NULL,
+  `cart_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `size` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `cart_items`
 --
 
 INSERT INTO `cart_items` (`cart_item_id`, `cart_id`, `product_id`, `quantity`, `size`) VALUES
 (8, 11, 11001, 2, 'S');
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `categories`
+-- Cấu trúc bảng cho bảng `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(100) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `parent_category_id` int(11) DEFAULT NULL,
+  `category_image_url` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `categories`
 --
 
 INSERT INTO `categories` (`category_id`, `category_name`, `created_at`, `parent_category_id`, `category_image_url`) VALUES
@@ -65,10 +106,27 @@ INSERT INTO `categories` (`category_id`, `category_name`, `created_at`, `parent_
 (4002, 'Giày Golf', '2024-11-04 13:20:14', 4, NULL),
 (4003, 'Dép', '2024-11-04 13:20:14', 4, NULL),
 (4004, 'Giày Bóng Đá', '2024-11-04 13:20:14', 4, NULL),
-(4007, 'Test', '2024-11-19 23:03:26', 1, 'img/img/quan/test/51elklD8orL._AC_UF1000,1000_QL80_.webp');
+(4007, 'Test', '2024-11-19 23:03:26', 1, 'img/img/quan/test/51elklD8orL._AC_UF1000,1000_QL80_.webp'),
+(4010, 'Testv2', '2024-11-20 16:50:00', 1, 'img/img/quan/testv2/51elklD8orL._AC_UF1000,1000_QL80_.webp');
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `orders`
+-- Cấu trúc bảng cho bảng `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `address_id` int(11) DEFAULT NULL,
+  `payment_method_id` int(11) DEFAULT NULL,
+  `order_status` enum('Pending','Shipped','Delivered','Cancelled') NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders`
 --
 
 INSERT INTO `orders` (`order_id`, `user_id`, `address_id`, `payment_method_id`, `order_status`, `total_amount`, `created_at`) VALUES
@@ -76,8 +134,23 @@ INSERT INTO `orders` (`order_id`, `user_id`, `address_id`, `payment_method_id`, 
 (4, 5, 4, 11, 'Cancelled', 3440.00, '2024-11-19 22:01:48'),
 (5, 4, 10, 15, 'Pending', 100.00, '2024-11-20 14:22:41');
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `order_items`
+-- Cấu trúc bảng cho bảng `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `order_item_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `size` varchar(50) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `order_items`
 --
 
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `size`, `quantity`, `price`) VALUES
@@ -87,8 +160,23 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `size`, `q
 (8, 4, 11006, 'XL', 4, 700.00),
 (9, 5, 45009, 'XS', 1, 100.00);
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `products`
+-- Cấu trúc bảng cho bảng `products`
+--
+
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `products`
 --
 
 INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_id`, `created_at`) VALUES
@@ -209,10 +297,23 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `category_
 (45004, 'Giày Đá Bóng Turf Predator Elite', 'Giày Đá Bóng Turf Predator Elite\nThiết kế mạnh mẽ, bám sân tốt.\nChất liệu chống nước, bền bỉ.', 1700.00, 4004, '2024-11-04 13:45:48'),
 (45005, 'Giày Đá Bóng Turf Predator Club Sock', 'Giày Đá Bóng Turf Predator Club Sock\nChất liệu thoáng khí, hỗ trợ tốt cho vận động viên.\nThiết kế năng động, dễ di chuyển.', 1800.00, 4004, '2024-11-04 13:45:48'),
 (45006, 'Giày Đá Bóng Trong Nhà Predator Freestyle', 'Giày Đá Bóng Trong Nhà Predator Freestyle\nThiết kế thời trang, hỗ trợ tối đa cho chân.\nChất liệu bền bỉ, dễ dàng làm sạch.', 1900.00, 4004, '2024-11-04 13:45:48'),
-(45009, 'Test', 'Test', 100.00, 4007, '2024-11-19 23:04:07');
+(45009, 'Test', 'Test', 100.00, 4007, '2024-11-19 23:04:07'),
+(45011, 'Test', '100', 100.00, 4010, '2024-11-20 16:50:26');
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `product_images`
+-- Cấu trúc bảng cho bảng `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `image_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image_url` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `product_images`
 --
 
 INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`) VALUES
@@ -954,10 +1055,22 @@ INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`) VALUES
 (1241, 12007, 'img/img/Quan/shorts/12007/h4.webp'),
 (1242, 12007, 'img/img/Quan/shorts/12007/h5.webp'),
 (1243, 12007, 'img/img/Quan/shorts/12007/h6.webp'),
-(1245, 45009, 'img/img/quan/test/45009/51elklD8orL._AC_UF1000,1000_QL80_.webp');
+(1247, 45011, 'img/img/quan/testv2/45011/artworks-IDl2hpyAbd8R2IVf-vyEd2A-t500x500.webp');
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `product_quantity`
+-- Cấu trúc bảng cho bảng `product_quantity`
+--
+
+CREATE TABLE `product_quantity` (
+  `product_id` int(11) NOT NULL,
+  `size` varchar(50) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `product_quantity`
 --
 
 INSERT INTO `product_quantity` (`product_id`, `size`, `quantity`) VALUES
@@ -1791,10 +1904,28 @@ INSERT INTO `product_quantity` (`product_id`, `size`, `quantity`) VALUES
 (45006, '48', 94),
 (45006, '49', 66),
 (45006, '50', 22),
-(45009, 'XS', 1);
+(45011, 'XS', 1);
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `users`
+-- Cấu trúc bảng cho bảng `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `user_type` enum('Customer','Admin') NOT NULL,
+  `phone_number` varchar(15) DEFAULT NULL,
+  `avatar_img_link` varchar(255) DEFAULT 'img/shop/account/default.png'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `users`
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_name`, `created_at`, `user_type`, `phone_number`, `avatar_img_link`) VALUES
@@ -1806,8 +1937,23 @@ INSERT INTO `users` (`user_id`, `email`, `password_hash`, `first_name`, `last_na
 (10, 'c@c', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'cpp', 'cpp', '2024-11-15 20:33:47', 'Customer', '123', 'img/shop/account/default.png'),
 (11, 'd@d', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'd@d', 'd@d', '2024-11-15 20:35:36', 'Customer', '123', 'img/shop/account/default.png');
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `user_payment_methods`
+-- Cấu trúc bảng cho bảng `user_payment_methods`
+--
+
+CREATE TABLE `user_payment_methods` (
+  `payment_method_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `card_number` varchar(20) DEFAULT NULL,
+  `card_holder_name` varchar(100) DEFAULT NULL,
+  `expiration_date` date DEFAULT NULL,
+  `cvc` int(3) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `user_payment_methods`
 --
 
 INSERT INTO `user_payment_methods` (`payment_method_id`, `user_id`, `card_number`, `card_holder_name`, `expiration_date`, `cvc`) VALUES
@@ -1816,8 +1962,27 @@ INSERT INTO `user_payment_methods` (`payment_method_id`, `user_id`, `card_number
 (11, 5, '213123', '123', '2022-12-01', 233),
 (15, 4, '222', '222', '2012-12-01', 123);
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `user_shipping_addresses`
+-- Cấu trúc bảng cho bảng `user_shipping_addresses`
+--
+
+CREATE TABLE `user_shipping_addresses` (
+  `address_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone_number` varchar(15) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `district` varchar(100) NOT NULL,
+  `ward` varchar(100) NOT NULL,
+  `detailed_address` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `user_shipping_addresses`
 --
 
 INSERT INTO `user_shipping_addresses` (`address_id`, `user_id`, `first_name`, `last_name`, `email`, `phone_number`, `city`, `district`, `ward`, `detailed_address`) VALUES
@@ -1828,6 +1993,225 @@ INSERT INTO `user_shipping_addresses` (`address_id`, `user_id`, `first_name`, `l
 (8, 5, 'vvv', 'vv', 'v@bv', '111', '10', '088', '03046', '1'),
 (9, 5, 'ff', 'ff', 'ff@gg', '121', '26', '248', '08926', 'we'),
 (10, 4, 'avc', 'abc', 'a@a', '123', '26', '252', '09118', 'aaa');
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD KEY `idx_cart_user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `idx_cart_id` (`cart_id`),
+  ADD KEY `idx_product_cart` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`),
+  ADD UNIQUE KEY `category_name` (`category_name`),
+  ADD KEY `parent_category_id` (`parent_category_id`);
+
+--
+-- Chỉ mục cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `address_id_fk` (`address_id`),
+  ADD KEY `payment_method_id_fk` (`payment_method_id`);
+
+--
+-- Chỉ mục cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`order_item_id`),
+  ADD KEY `idx_order_id` (`order_id`),
+  ADD KEY `idx_product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `idx_category_id` (`category_id`);
+ALTER TABLE `products` ADD FULLTEXT KEY `idx_product_name_desc` (`name`,`description`);
+
+--
+-- Chỉ mục cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `product_quantity`
+--
+ALTER TABLE `product_quantity`
+  ADD KEY `idx_product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Chỉ mục cho bảng `user_payment_methods`
+--
+ALTER TABLE `user_payment_methods`
+  ADD PRIMARY KEY (`payment_method_id`),
+  ADD KEY `user_id_fk` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `user_shipping_addresses`
+--
+ALTER TABLE `user_shipping_addresses`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `user_id_fk` (`user_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `carts`
+--
+ALTER TABLE `carts`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT cho bảng `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4011;
+
+--
+-- AUTO_INCREMENT cho bảng `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT cho bảng `products`
+--
+ALTER TABLE `products`
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45012;
+
+--
+-- AUTO_INCREMENT cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1248;
+
+--
+-- AUTO_INCREMENT cho bảng `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT cho bảng `user_payment_methods`
+--
+ALTER TABLE `user_payment_methods`
+  MODIFY `payment_method_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT cho bảng `user_shipping_addresses`
+--
+ALTER TABLE `user_shipping_addresses`
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- Các ràng buộc cho các bảng đã đổ
+--
+
+--
+-- Các ràng buộc cho bảng `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Các ràng buộc cho bảng `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`cart_id`),
+  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+--
+-- Các ràng buộc cho bảng `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`parent_category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `address_id_fk` FOREIGN KEY (`address_id`) REFERENCES `user_shipping_addresses` (`address_id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `payment_method_id_fk` FOREIGN KEY (`payment_method_id`) REFERENCES `user_payment_methods` (`payment_method_id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+
+--
+-- Các ràng buộc cho bảng `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
+
+--
+-- Các ràng buộc cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `product_quantity`
+--
+ALTER TABLE `product_quantity`
+  ADD CONSTRAINT `product_quantity_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `user_payment_methods`
+--
+ALTER TABLE `user_payment_methods`
+  ADD CONSTRAINT `user_id_fk_payment` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `user_shipping_addresses`
+--
+ALTER TABLE `user_shipping_addresses`
+  ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
